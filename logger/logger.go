@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"gin-test/config"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -19,17 +18,23 @@ import (
 var lg *zap.Logger
 
 // InitLogger 初始化Logger
-func InitLogger() (err error) {
-	writeSyncer := getLogWriter(config.Conf.Filename, config.Conf.MaxSize, config.Conf.MaxBackups, config.Conf.MaxAge)
-	encoder := getEncoder()
-	var l = new(zapcore.Level)
-	err = l.UnmarshalText([]byte(config.Conf.Level))
-	if err != nil {
-		return
-	}
-	core := zapcore.NewCore(encoder, writeSyncer, l)
+//func InitLogger() (err error) {
+//	writeSyncer := getLogWriter(config.Conf.Filename, config.Conf.MaxSize, config.Conf.MaxBackups, config.Conf.MaxAge)
+//	encoder := getEncoder()
+//	var l = new(zapcore.Level)
+//	err = l.UnmarshalText([]byte(config.Conf.Level))
+//	if err != nil {
+//		return
+//	}
+//	core := zapcore.NewCore(encoder, writeSyncer, l)
+//
+//	lg = zap.New(core, zap.AddCaller())
+//	zap.ReplaceGlobals(lg) // 替换zap包中全局的logger实例，后续在其他包中只需使用zap.L()调用即可
+//	return
+//}
 
-	lg = zap.New(core, zap.AddCaller())
+func InitLogger() (err error) {
+	lg, _ = zap.NewDevelopment()
 	zap.ReplaceGlobals(lg) // 替换zap包中全局的logger实例，后续在其他包中只需使用zap.L()调用即可
 	return
 }

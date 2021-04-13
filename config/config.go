@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"strings"
 
 	"gopkg.in/ini.v1"
 )
@@ -47,6 +48,7 @@ type QiniuConfig struct {
 }
 
 var Conf = new(Config)
+var file *ini.File
 
 func init() {
 	//env := os.Getenv("env")
@@ -62,6 +64,15 @@ func init() {
 	LoadQiniu(file)
 	LoadLog(file)
 }
+
+//获取配置 GetConfig("server::AppMode")
+func GetConfig(key string) *ini.Key {
+	parts := strings.Split(key, "::")
+	section := parts[0]
+	keyStr := parts[1]
+	return file.Section(section).Key(keyStr)
+}
+
 func LoadServer(file *ini.File) {
 	Conf.AppConfig = &AppConfig{
 		AppMode:  file.Section("server").Key("AppMode").MustString("debug"),

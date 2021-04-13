@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"gin-test/config"
+	"gin-test/utils"
 	"log"
 	"os"
 	"time"
@@ -18,12 +19,19 @@ var db *gorm.DB
 var err error
 
 func InitDb() {
+	//dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	//	config.Conf.DbUser,
+	//	config.Conf.DbPassWord,
+	//	config.Conf.DbHost,
+	//	config.Conf.DbPort,
+	//	config.Conf.DbName,
+	//)
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		config.Conf.DbUser,
-		config.Conf.DbPassWord,
-		config.Conf.DbHost,
-		config.Conf.DbPort,
-		config.Conf.DbName,
+		utils.GetConfig("database::DbUser").String(),
+		utils.GetConfig("database::DbPassWord").String(),
+		utils.GetConfig("database::DbHost").String(),
+		utils.GetConfig("database::DbPort").String(),
+		utils.GetConfig("database::DbName").String(),
 	)
 	//根据环境选择debug
 	var newLogger logger.Interface
