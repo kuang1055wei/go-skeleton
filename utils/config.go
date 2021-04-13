@@ -1,5 +1,6 @@
 package utils
 
+//推荐用config2方式
 import (
 	"flag"
 	"fmt"
