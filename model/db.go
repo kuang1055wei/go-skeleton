@@ -7,6 +7,8 @@ import (
 	"os"
 	"time"
 
+	"gorm.io/plugin/dbresolver"
+
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 
@@ -65,17 +67,25 @@ func InitDb() {
 		os.Exit(1)
 	}
 
+	db.Use(
+		dbresolver.Register(dbresolver.Config{}).
+			SetConnMaxIdleTime(time.Hour).
+			SetConnMaxLifetime(24 * time.Hour).
+			SetMaxIdleConns(100).
+			SetMaxOpenConns(200),
+	)
+
 	// 迁移数据表，在没有数据表结构变更时候，建议注释不执行
 	//_ = db.AutoMigrate(&User{}, &Article{}, &Category{}, Profile{}, Comment{})
 
-	sqlDB, _ := db.DB()
-	// SetMaxIdleCons 设置连接池中的最大闲置连接数。
-	sqlDB.SetMaxIdleConns(10)
-
-	// SetMaxOpenCons 设置数据库的最大连接数量。
-	sqlDB.SetMaxOpenConns(100)
-
-	// SetConnMaxLifetiment 设置连接的最大可复用时间。
-	sqlDB.SetConnMaxLifetime(10 * time.Second)
+	//sqlDB, _ := db.DB()
+	//// SetMaxIdleCons 设置连接池中的最大闲置连接数。
+	//sqlDB.SetMaxIdleConns(10)
+	//
+	//// SetMaxOpenCons 设置数据库的最大连接数量。
+	//sqlDB.SetMaxOpenConns(100)
+	//
+	//// SetConnMaxLifetiment 设置连接的最大可复用时间。
+	//sqlDB.SetConnMaxLifetime(10 * time.Second)
 
 }
