@@ -1,9 +1,11 @@
 package router
 
 import (
+	"fmt"
 	"gin-test/controller/article"
 	"gin-test/controller/site"
 	"gin-test/controller/test"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +15,20 @@ import (
 
 // 	return router
 // }
+// 定义中间
+func MiddleWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		t := time.Now()
+		fmt.Println("中间件开始执行了")
+		//设置变量到Context的key中，可以通过Get()取
+		c.Set("request", "中间件")
+		status := c.Writer.Status()
+		fmt.Println("中间件执行完毕", status)
+		t2 := time.Since(t)
+		fmt.Println("time:", t2)
+	}
 
+}
 func LoadDefault(e *gin.Engine) {
 	e.GET("/", test.Index)
 	e.GET("/helloWord", test.HelloWord)
@@ -25,4 +40,10 @@ func LoadDefault(e *gin.Engine) {
 
 	e.GET("/article/info", article.GetArticle)
 	e.GET("/article/list", article.GetArticleList)
+	//路由组
+	v1 := e.Group("v1").Use(MiddleWare())
+	{
+		v1.GET("/article/info", article.GetArticle)
+		v1.GET("/article/list", article.GetArticleList)
+	}
 }
