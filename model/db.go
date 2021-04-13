@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"gin-test/config"
 	"gin-test/utils"
 	"log"
 	"os"
@@ -35,7 +34,7 @@ func InitDb() {
 	)
 	//根据环境选择debug
 	var newLogger logger.Interface
-	if config.Conf.AppMode == "debug" {
+	if utils.GetConfig("server::AppMode").String() == "debug" {
 		newLogger = logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags),
 			logger.Config{
