@@ -71,12 +71,12 @@ func SetNx(key string, data interface{}, time int) (bool, error) {
 		return false, err
 	}
 
-	reply, err := redis.Bytes(conn.Do("SET", key, value, "nx", "ex", time))
+	reply, err := redis.String(conn.Do("SET", key, value, "nx", "ex", time))
 	if err != nil {
 		return false, err
 	}
 
-	return string(reply) == "OK", err
+	return reply == "OK", err
 }
 
 // Exists check a key
