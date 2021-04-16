@@ -60,6 +60,7 @@ func MyHttp(c *gin.Context) {
 	})
 }
 
+//测试协程拉取
 func MyChan(c *gin.Context) {
 	id1, _ := strconv.Atoi(c.DefaultQuery("id1", "3"))
 	id2, _ := strconv.Atoi(c.DefaultQuery("id2", "4"))
