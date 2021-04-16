@@ -51,11 +51,14 @@ func (m *Article) TableName() string {
 }
 
 // GetFromID 通过id获取内容 Primary key
-func (obj *Article) GetArticleById(id int) (result Article, err error) {
+func (obj *Article) GetArticleById(id int) (Article, error) {
+	var result Article
 	err = db.Table(obj.TableName()).Preload("Category").Where("id = ?", id).Find(&result).Error
 	if err != nil {
 		fmt.Println(err)
 	}
+	//使用gorm.Expr使用表达式
+	db.Model(&result).Where("id = ?", id).UpdateColumn("read_count", gorm.Expr("read_count + ?", 1))
 	return result, err
 }
 
