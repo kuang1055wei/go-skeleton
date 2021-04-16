@@ -48,17 +48,35 @@ func Set(key string, data interface{}, time int) error {
 		return err
 	}
 
-	_, err = conn.Do("SET", key, value)
+	_, err = conn.Do("SET", key, value, "ex", time)
 	if err != nil {
 		return err
 	}
 
-	_, err = conn.Do("EXPIRE", key, time)
-	if err != nil {
-		return err
-	}
+	//_, err = conn.Do("EXPIRE", key, time)
+	//if err != nil {
+	//	return err
+	//}
 
 	return nil
+}
+
+//setnx ok等于拿到锁，
+func SetNx(key string, data interface{}, time int) (bool, error) {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	value, err := json.Marshal(data)
+	if err != nil {
+		return false, err
+	}
+
+	reply, err := redis.Bytes(conn.Do("SET", key, value, "nx", "ex", time))
+	if err != nil {
+		return false, err
+	}
+
+	return string(reply) == "OK", err
 }
 
 // Exists check a key
