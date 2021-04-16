@@ -1,8 +1,10 @@
 package article
 
 import (
+	"encoding/json"
 	"fmt"
 	"gin-test/model"
+	"gin-test/pkg/gredis"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -11,9 +13,18 @@ import (
 )
 
 func GetArticle(c *gin.Context) {
+	var articleInfo model.Article
 	id, _ := strconv.Atoi(c.Query("id"))
-	art := model.Article{}
-	articleInfo, _ := art.GetArticleById(id)
+	key := "article:" + strconv.Itoa(id)
+	data, err := gredis.Get(key)
+	if len(data) == 0 || err != nil {
+		art := model.Article{}
+		articleInfo, _ = art.GetArticleById(id)
+		err = gredis.Set(key, articleInfo, 3600)
+	} else {
+		_ = json.Unmarshal(data, &articleInfo)
+	}
+
 	c.JSON(http.StatusOK, articleInfo)
 }
 

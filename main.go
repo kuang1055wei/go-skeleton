@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gin-test/logger"
 	"gin-test/model"
+	"gin-test/pkg/gredis"
 	"gin-test/router"
 	"gin-test/utils"
 
@@ -30,6 +31,9 @@ func MiddleWare() gin.HandlerFunc {
 func main() {
 	//初始化配置文件
 	utils.InitConfig()
+	//redis
+	_ = gredis.Setup()
+
 	r := gin.New()
 	gin.SetMode("debug")
 	store := cookie.NewStore([]byte("secret"))

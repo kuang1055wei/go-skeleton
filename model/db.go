@@ -28,15 +28,15 @@ func InitDb() {
 	//	config.Conf.DbName,
 	//)
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		utils.GetConfig("database::DbUser").String(),
-		utils.GetConfig("database::DbPassWord").String(),
-		utils.GetConfig("database::DbHost").String(),
-		utils.GetConfig("database::DbPort").String(),
-		utils.GetConfig("database::DbName").String(),
+		utils.Conf.DbConfig.DbUser,
+		utils.Conf.DbConfig.DbPassWord,
+		utils.Conf.DbConfig.DbHost,
+		utils.Conf.DbConfig.DbPort,
+		utils.Conf.DbConfig.DbName,
 	)
 	//根据环境选择debug
 	var newLogger logger.Interface
-	if utils.GetConfig("server::AppMode").String() == "debug" {
+	if utils.Conf.AppConfig.AppMode == "debug" {
 		newLogger = logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags),
 			logger.Config{
