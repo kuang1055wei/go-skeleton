@@ -17,7 +17,7 @@ func GetArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("id"))
 	key := "article:" + strconv.Itoa(id)
 	data, err := gredis.Get(key)
-	if len(data) == 0 || err != nil {
+	if len(data) == 0 || err == nil {
 		art := model.Article{}
 		articleInfo, _ = art.GetArticleById(id)
 		err = gredis.Set(key, articleInfo, 3600)
