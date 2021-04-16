@@ -84,6 +84,7 @@ func MyChan(c *gin.Context) {
 func getArt(id int) <-chan model.Article {
 	artChan := make(chan model.Article)
 	go func(id int) {
+
 		artModel := model.Article{}
 		art, _ := artModel.GetArticleById(id)
 		artChan <- art
