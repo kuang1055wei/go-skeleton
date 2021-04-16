@@ -8,13 +8,14 @@ import (
 
 type Article struct {
 	gorm.Model
-	Title        string `gorm:"column:title;type:varchar(100);not null" json:"title"`
-	Cid          uint64 `gorm:"index:fk_article_category;column:cid;type:bigint(20) unsigned;not null" json:"cid"`
-	Desc         string `gorm:"column:desc;type:varchar(200)" json:"desc"`
-	Content      string `gorm:"column:content;type:longtext" json:"content"`
-	Img          string `gorm:"column:img;type:varchar(100)" json:"img"`
-	CommentCount int64  `gorm:"column:comment_count;type:bigint(20);not null;default:0" json:"comment_count"`
-	ReadCount    int64  `gorm:"column:read_count;type:bigint(20);not null;default:0" json:"read_count"`
+	Title        string   `gorm:"column:title;type:varchar(100);not null" json:"title"`
+	Cid          uint64   `gorm:"index:fk_article_category;column:cid;type:bigint(20) unsigned;not null" json:"cid"`
+	Desc         string   `gorm:"column:desc;type:varchar(200)" json:"desc"`
+	Content      string   `gorm:"column:content;type:longtext" json:"content"`
+	Img          string   `gorm:"column:img;type:varchar(100)" json:"img"`
+	CommentCount int64    `gorm:"column:comment_count;type:bigint(20);not null;default:0" json:"comment_count"`
+	ReadCount    int64    `gorm:"column:read_count;type:bigint(20);not null;default:0" json:"read_count"`
+	Category     Category `gorm:"foreignKey:Cid"`
 }
 
 // ArticleColumns get sql column name.获取数据库列名
@@ -51,7 +52,7 @@ func (m *Article) TableName() string {
 
 // GetFromID 通过id获取内容 Primary key
 func (obj *Article) GetArticleById(id int) (result Article, err error) {
-	err = db.Table(obj.TableName()).Where("id = ?", id).Find(&result).Error
+	err = db.Table(obj.TableName()).Preload("Category").Where("id = ?", id).Find(&result).Error
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -62,9 +63,10 @@ func (obj *Article) GetArticleById(id int) (result Article, err error) {
 func GetArticleList(condition map[string]string, pageSize int, page int) ([]Article, int64) {
 	var articleList []Article
 	var total int64
-	column := "id,title,`desc`,img,comment_count,read_count,created_at,updated_at"
+	column := "id,title,`cid`,`desc`,img,comment_count,read_count,created_at,updated_at"
 	//column := "id,title, img,  `desc`, comment_count, read_count"
 	tx := db.Table("article").
+		Preload("Category").
 		Select(column).
 		Limit(pageSize).
 		Offset((page - 1) * pageSize).
