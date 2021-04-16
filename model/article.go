@@ -64,13 +64,17 @@ func GetArticleList(condition map[string]string, pageSize int, page int) ([]Arti
 	var total int64
 	column := "id,title,`desc`,img,comment_count,read_count,created_at,updated_at"
 	//column := "id,title, img,  `desc`, comment_count, read_count"
-	tx := db.Table("article").Select(column).Limit(pageSize).Offset((page - 1) * pageSize).
+	tx := db.Table("article").
+		Select(column).
+		Limit(pageSize).
+		Offset((page - 1) * pageSize).
 		Order("created_at desc")
+
 	if _, ok := condition["title"]; ok {
 		tx.Where("title like ?", condition["title"]+"%")
 	}
 
-	err = tx.Find((&articleList)).Count(&total).Error
+	err = tx.Find(&articleList).Count(&total).Error
 	if err != nil {
 		return nil, 0
 	}
@@ -82,10 +86,14 @@ func SearchArticle(title string, pageSize int, page int) ([]Article, int64) {
 	var articleList []Article
 	var total int64
 	column := "id,title,cid,`desc`,img,comment_count,read_count,created_at,updated_at"
-	err = db.Table("article").Select(column).
+	err = db.Table("article").
+		Select(column).
 		Where("title Like ?", title+"%").
-		Limit(pageSize).Offset((page - 1) * pageSize).
-		Order("created_at desc").Find(&articleList).Count(&total).Error
+		Limit(pageSize).
+		Offset((page - 1) * pageSize).
+		Order("created_at desc").
+		Find(&articleList).
+		Count(&total).Error
 	if err != nil {
 		return nil, 0
 	}

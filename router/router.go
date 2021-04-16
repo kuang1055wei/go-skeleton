@@ -41,6 +41,8 @@ func LoadDefault(e *gin.Engine) {
 	e.GET("/article/info", article.GetArticle)
 	e.GET("/article/list", article.GetArticleList)
 	e.GET("/article/myHttp", article.MyHttp)
+	e.GET("/article/myChan", article.MyChan)
+
 	//路由组
 	v1 := e.Group("v1").Use(MiddleWare())
 	{

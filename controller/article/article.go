@@ -59,3 +59,34 @@ func MyHttp(c *gin.Context) {
 		//"content": resp.ContentLength,
 	})
 }
+
+func MyChan(c *gin.Context) {
+	id1, _ := strconv.Atoi(c.DefaultQuery("id1", "3"))
+	id2, _ := strconv.Atoi(c.DefaultQuery("id2", "4"))
+	art1Chan := getArt(id1)
+	art2Chan := getArt(id2)
+
+	art1 := <-art1Chan
+	art2 := <-art2Chan
+	data := make(map[string]interface{})
+	data["art1"] = art1
+	data["art2"] = art2
+	c.JSON(http.StatusOK, gin.H{
+		"data": data,
+	})
+	//ctx := context.Background()
+	//context.WithCancel(ctx)
+	//context.WithTimeout(ctx, time.Microsecond)
+	//context.WithDeadline(ctx, time.Now().Add(20))
+	//context.WithValue(ctx, "anc", "aaaa")
+}
+
+func getArt(id int) <-chan model.Article {
+	artChan := make(chan model.Article)
+	go func(id int) {
+		artModel := model.Article{}
+		art, _ := artModel.GetArticleById(id)
+		artChan <- art
+	}(id)
+	return artChan
+}

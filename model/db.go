@@ -59,6 +59,7 @@ func InitDb() {
 		NamingStrategy: schema.NamingStrategy{
 			// 使用单数表名，启用该选项，此时，`User` 的表名应该是 `user`
 			SingularTable: true,
+			TablePrefix:   "",
 		},
 	})
 
