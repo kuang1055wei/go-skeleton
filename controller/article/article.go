@@ -27,6 +27,7 @@ func GetArticle(c *gin.Context) {
 
 	reply, _ := gredis.SetNx("test", "test value", 60)
 	fmt.Println("-----------", reply)
+
 	c.JSON(http.StatusOK, articleInfo)
 }
 

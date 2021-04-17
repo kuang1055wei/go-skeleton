@@ -105,12 +105,11 @@ func Get(key string) ([]byte, error) {
 	return reply, nil
 }
 
-// Delete delete a kye
-func Delete(key string) (bool, error) {
+//删除key1,key2,keyN...
+func Del(key ...interface{}) (int64, error) {
 	conn := RedisConn.Get()
 	defer conn.Close()
-
-	return redis.Bool(conn.Do("DEL", key))
+	return redis.Int64(conn.Do("DEL", key...))
 }
 
 // LikeDeletes batch delete
@@ -124,7 +123,7 @@ func LikeDeletes(key string) error {
 	}
 
 	for _, key := range keys {
-		_, err = Delete(key)
+		_, err = Del(key)
 		if err != nil {
 			return err
 		}
