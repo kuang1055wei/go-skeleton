@@ -35,6 +35,7 @@ func GetArticle(c *gin.Context) {
 	redisMap["res1"] = res1
 	redisMap["res2"] = res2
 	redisMap["articleCache"] = data
+	redisMap["poolStatus"] = gredis.RedisClient.PoolStats()
 
 	c.JSON(http.StatusOK, gin.H{
 		"articleInfo": articleInfo,
