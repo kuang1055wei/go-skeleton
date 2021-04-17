@@ -26,7 +26,20 @@ func GetArticle(c *gin.Context) {
 	} else {
 		_ = json.Unmarshal([]byte(data), &articleInfo)
 	}
-
+	//测试连接池
+	//var wg sync.WaitGroup
+	//for i := 0; i < 1000; i++ {
+	//	wg.Add(1)
+	//	go func(i int) {
+	//		res2, _ := gredis.RedisClient.Get(gredis.Ctx, "test2").Result()
+	//		status := gredis.RedisClient.PoolStats()
+	//		data1, _ := json.Marshal(status)
+	//		fmt.Println(strconv.Itoa(i), res2, string(data1))
+	//		wg.Done()
+	//	}(i)
+	//}
+	//wg.Wait()
+	//测试连接池end
 	res, _ := gredis.RedisClient.SetNX(gredis.Ctx, "test", "test value", time.Second*60).Result()
 	res1, _ := gredis.RedisClient.SetNX(gredis.Ctx, "test2", "test value2", time.Second*55).Result()
 	res2, _ := gredis.RedisClient.Get(gredis.Ctx, "test2").Result()
