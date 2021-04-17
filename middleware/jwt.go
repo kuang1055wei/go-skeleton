@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var JwtKey = []byte(utils.GetConfig("server::JwtKey").String())
+var JwtKey = []byte(utils.Conf.AppConfig.JwtKey)
 
 type MyClaims struct {
 	Username string `json:"username"`
