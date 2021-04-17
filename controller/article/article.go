@@ -18,27 +18,28 @@ func GetArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("id"))
 	key := "article:" + strconv.Itoa(id)
 	data, err := gredis.RedisClient.Get(gredis.Ctx, key).Result()
-	fmt.Println(data, "66666666666")
 	if data == "" || err != nil {
 		art := model.Article{}
 		articleInfo, _ = art.GetArticleById(id)
 		cacheValue, _ := json.Marshal(articleInfo)
-		errSet := gredis.RedisClient.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
-		fmt.Println(errSet, "111111111111")
+		_ = gredis.RedisClient.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
 	} else {
 		_ = json.Unmarshal([]byte(data), &articleInfo)
-		fmt.Println("get cache", "22222222222222")
 	}
 
-	reply, _ := gredis.RedisClient.SetNX(gredis.Ctx, "test", "test value", time.Second*60).Result()
-	fmt.Println(reply, "33333333333333333")
+	res, _ := gredis.RedisClient.SetNX(gredis.Ctx, "test", "test value", time.Second*60).Result()
+	res1, _ := gredis.RedisClient.SetNX(gredis.Ctx, "test2", "test value2", time.Second*55).Result()
+	res2, _ := gredis.RedisClient.Get(gredis.Ctx, "test2").Result()
+	redisMap := make(map[string]interface{})
+	redisMap["res"] = res
+	redisMap["res1"] = res1
+	redisMap["res2"] = res2
+	redisMap["articleCache"] = data
 
-	res, err := gredis.RedisClient.SetNX(gredis.Ctx, "test2", "test value2", time.Second*55).Result()
-	fmt.Println(res, err, "44444444444444")
-	res2, err2 := gredis.RedisClient.Get(gredis.Ctx, "test2").Result()
-	fmt.Println(res2, err2, "55555555555555555")
-
-	c.JSON(http.StatusOK, articleInfo)
+	c.JSON(http.StatusOK, gin.H{
+		"articleInfo": articleInfo,
+		"redisRes":    redisMap,
+	})
 }
 
 func GetArticleList(c *gin.Context) {
