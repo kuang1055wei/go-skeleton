@@ -113,10 +113,10 @@ func EditArticle(c *gin.Context) {
 		})
 		return
 	}
-	json, _ := json.Marshal(artForm)
+	jsonStr, _ := json.Marshal(artForm)
 	c.JSON(http.StatusOK, gin.H{
 		"article": artForm,
-		"artJson": string(json),
+		"artJson": string(jsonStr),
 		"msg":     "success",
 	})
 }
