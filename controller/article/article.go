@@ -20,12 +20,12 @@ func GetArticle(c *gin.Context) {
 	var articleInfo model.Article
 	id, _ := strconv.Atoi(c.Query("id"))
 	key := "article:" + strconv.Itoa(id)
-	data, err := gredis.RedisClient.Get(gredis.Ctx, key).Result()
+	data, err := gredis.Client.Get(gredis.Ctx, key).Result()
 	if data == "" || err != nil {
 		art := model.Article{}
 		articleInfo, _ = art.GetArticleById(id)
 		cacheValue, _ := json.Marshal(articleInfo)
-		_ = gredis.RedisClient.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
+		_ = gredis.Client.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
 	} else {
 		_ = json.Unmarshal([]byte(data), &articleInfo)
 	}
@@ -43,15 +43,15 @@ func GetArticle(c *gin.Context) {
 	//}
 	//wg.Wait()
 	//测试连接池end
-	res, _ := gredis.RedisClient.SetNX(gredis.Ctx, "test", "test value", time.Second*60).Result()
-	res1, _ := gredis.RedisClient.SetNX(gredis.Ctx, "test2", "test value2", time.Second*55).Result()
-	res2, _ := gredis.RedisClient.Get(gredis.Ctx, "test2").Result()
+	res, _ := gredis.Client.SetNX(gredis.Ctx, "test", "test value", time.Second*60).Result()
+	res1, _ := gredis.Client.Set(gredis.Ctx, "test2", "test value2", time.Second*55).Result()
+	res2, _ := gredis.Client.Get(gredis.Ctx, "test2").Result()
 	redisMap := make(map[string]interface{})
 	redisMap["res"] = res
 	redisMap["res1"] = res1
 	redisMap["res2"] = res2
 	redisMap["articleCache"] = data
-	redisMap["poolStatus"] = gredis.RedisClient.PoolStats()
+	redisMap["poolStatus"] = gredis.Client.PoolStats()
 
 	c.JSON(http.StatusOK, gin.H{
 		"articleInfo": articleInfo,

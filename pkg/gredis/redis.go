@@ -14,11 +14,11 @@ import (
 var Ctx = context.Background()
 
 //redisclient
-var RedisClient *redis.Client
+var Client *redis.Client
 
 func Setup() error {
 
-	RedisClient = redis.NewClient(&redis.Options{
+	Client = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s", utils.Conf.RedisConfig.Host),
 		Password: utils.Conf.RedisConfig.Password, // no password set
 		DB:       0,                               // use default DB
@@ -27,7 +27,7 @@ func Setup() error {
 		MinIdleConns: 10,
 		IdleTimeout:  utils.Conf.RedisConfig.IdleTimeout, //关闭空闲连接时间
 	})
-	if err := RedisClient.Ping(Ctx).Err(); err != nil {
+	if err := Client.Ping(Ctx).Err(); err != nil {
 		log.Println(err)
 	}
 	return nil
