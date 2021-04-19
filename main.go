@@ -65,6 +65,7 @@ func main() {
 	}
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	//log结束
+	_ = utils.InitTrans("zh")
 
 	//logger end
 	//加载路由

@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"gin-test/model"
 	"gin-test/pkg/gredis"
+	"gin-test/utils"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 
 	"github.com/gin-gonic/gin"
 )
@@ -68,6 +71,39 @@ func GetArticleList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"list":  list,
 		"total": total,
+	})
+}
+
+type ArticleForm struct {
+	Title        string `json:"title" form:"title" binding:"required"`
+	Cid          uint64 `json:"cid" form:"cid" binding:"required"`
+	Desc         string `json:"desc" form:"cid" binding:"required"`
+	Content      string `json:"content" form:"cid" binding:"required"`
+	Img          string `json:"img" form:"cid" binding:"required"`
+	CommentCount int64  `json:"comment_count" form:"cid" binding:"required"`
+	ReadCount    int64  `json:"read_count" form:"cid" binding:"required"`
+}
+
+func EditArticle(c *gin.Context) {
+	var artForm ArticleForm
+	if err := c.ShouldBind(&artForm); err != nil {
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			c.JSON(http.StatusOK, gin.H{
+				"type": 1,
+				"msg":  err.Error(),
+			})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"type": 2,
+			"msg":  utils.RemoveTopStruct(errs.Translate(utils.Trans)),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"article": artForm,
+		"msg":     "success",
 	})
 }
 

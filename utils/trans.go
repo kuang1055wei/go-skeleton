@@ -56,15 +56,39 @@ func InitTrans(locale string) (err error) {
 		default:
 			err = enTranslations.RegisterDefaultTranslations(v, Trans)
 		}
+		if err != nil {
+			return err
+		}
+
+		//注册自定义验证方法
+		if err := v.RegisterTranslation("myValidate",
+			Trans,
+			registerTranslator("myvalidate", "{0}必须要晚于当前日期"),
+			translate,
+		); err != nil {
+			return err
+		}
+
 		return
 	}
 	return
 }
 
-func removeTopStruct(fields map[string]string) map[string]string {
-	res := map[string]string{}
-	for field, err := range fields {
-		res[field[strings.Index(field, ".")+1:]] = err
+// registerTranslator 为自定义字段添加翻译功能
+func registerTranslator(tag string, msg string) validator.RegisterTranslationsFunc {
+	return func(trans ut.Translator) error {
+		if err := trans.Add(tag, msg, false); err != nil {
+			return err
+		}
+		return nil
 	}
-	return res
+}
+
+// translate 自定义字段的翻译方法
+func translate(trans ut.Translator, fe validator.FieldError) string {
+	msg, err := trans.T(fe.Tag(), fe.Field())
+	if err != nil {
+		panic(fe.(error).Error())
+	}
+	return msg
 }
