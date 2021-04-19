@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -21,4 +23,12 @@ func RemoveTopStruct(fields map[string]string) map[string]string {
 		res[field[strings.Index(field, ".")+1:]] = err
 	}
 	return res
+}
+
+// EncodeMD5 md5 encryption
+func EncodeMD5(value string) string {
+	m := md5.New()
+	m.Write([]byte(value))
+
+	return hex.EncodeToString(m.Sum(nil))
 }

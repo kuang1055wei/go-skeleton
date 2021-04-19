@@ -21,6 +21,18 @@ type Config struct {
 
 type AppConfig struct {
 	JwtKey string `ini:"JwtKey"`
+
+	PrefixUrl string `ini:"PrefixUrl"`
+
+	RuntimeRootPath string `ini:"RuntimeRootPath"`
+
+	ImageSavePath  string   `ini:"ImageSavePath"`
+	ImageMaxSize   int      `ini:"ImageMaxSize"`
+	ImageAllowExts []string `ini:"ImageAllowExts"`
+
+	ExportSavePath string `ini:"ExportSavePath"`
+	QrCodeSavePath string `ini:"QrCodeSavePath"`
+	FontSavePath   string `ini:"FontSavePath"`
 }
 
 type ServerConfig struct {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gin-test/model"
 	"gin-test/pkg/gredis"
+	"gin-test/pkg/upload"
 	"gin-test/utils"
 	"io/ioutil"
 	"net/http"
@@ -180,4 +181,38 @@ func getArt(id int) <-chan model.Article {
 		artChan <- art
 	}(id)
 	return artChan
+}
+
+func uploadImg(c *gin.Context) {
+	file, image, err := c.Request.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"err": err.Error(),
+		})
+	}
+	if image == nil {
+		return
+	}
+
+	imageName := upload.GetImageName(image.Filename)
+	fullPath := upload.GetImageFullPath()
+	savePath := upload.GetImagePath()
+	src := fullPath + imageName
+	if !upload.CheckImageExt(imageName) || !upload.CheckImageSize(file) {
+		return
+	}
+
+	err = upload.CheckImage(fullPath)
+	if err != nil {
+		return
+	}
+
+	if err := c.SaveUploadedFile(image, src); err != nil {
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"image_url":      upload.GetImageFullUrl(imageName),
+		"image_save_url": savePath + imageName,
+	})
+
 }
