@@ -85,7 +85,7 @@ func main() {
 	address := fmt.Sprintf(":%s", utils.Conf.ServerConfig.HttpPort)
 	readTimeout := utils.Conf.ServerConfig.ReadTimeout * time.Second
 	writeTimeout := utils.Conf.ServerConfig.WriteTimeout * time.Second
-	maxHeaderBytes := 1 << 20
+	maxHeaderBytes := 1 << 20 //1048576 = 1mb
 
 	server := &http.Server{
 		Addr:           address,
