@@ -51,11 +51,15 @@ func (m *Article) TableName() string {
 // GetFromID 通过id获取内容 Primary key
 func (obj *Article) GetArticleById(id int) (Article, error) {
 	var result Article
-	err = db.Table(obj.TableName()).Preload("Category").Where("id = ?", id).Find(&result).Error
-	if err != nil {
-		return result, err
+	//First、Take、Last  没有找到记录时，它会返回 ErrRecordNotFound 错误
+	res := db.Preload("Category").First(&result, id)
+
+	//res := db.Table(obj.TableName()).Preload("Category").Where("id = ?", id).Find(&result)
+	//res.RowsAffected //返回找到的记录数，相当于 `len(users)`
+	if res.Error != nil {
+		return result, res.Error
 	}
-	return result, err
+	return result, res.Error
 }
 
 //使用gorm.Expr使用表达式
@@ -128,6 +132,24 @@ func SearchArticle(title string, pageSize int, page int) ([]Article, int64) {
 		return nil, 0
 	}
 	return articleList, total
+}
+
+func SearchArticle2(title string, pageSize int, page int) ([]Article, int64, error) {
+	var articleList []Article
+	var total int64
+	column := "id,title,cid,`desc`,img,comment_count,read_count,created_at,updated_at"
+	result := db.Table("article").
+		Select(column).
+		Where("title Like ?", title+"%").
+		Limit(pageSize).
+		Offset((page - 1) * pageSize).
+		Order("created_at desc").
+		Find(&articleList).
+		Count(&total)
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return articleList, total, result.Error
 }
 
 func createArticle(data *Article) (bool, error) {

@@ -25,7 +25,7 @@ func GetArticle(c *gin.Context) {
 	data, err := gredis.Client.Get(gredis.Ctx, key).Result()
 	if data == "" || err != nil {
 		art := model.Article{}
-		articleInfo, _ = art.GetArticleById(id)
+		articleInfo, err = art.GetArticleById(id)
 		if articleInfo != (model.Article{}) {
 			cacheValue, _ := json.Marshal(articleInfo)
 			_ = gredis.Client.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
@@ -83,6 +83,19 @@ func GetArticleList(c *gin.Context) {
 		"total1": total1,
 		"list":   list,
 		"total":  total,
+	})
+}
+
+func SearchArticle(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	title := c.Query("title")
+
+	list, total, err := model.SearchArticle2(title, pageSize, page)
+	fmt.Printf("%+v\n\n", err)
+	c.JSON(http.StatusOK, gin.H{
+		"list":  list,
+		"total": total,
 	})
 }
 
