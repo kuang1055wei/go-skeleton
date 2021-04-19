@@ -16,6 +16,11 @@ type Config struct {
 	LogConfig    `ini:"log"`
 	QiniuConfig  `ini:"qiniu"`
 	RedisConfig  `ini:"redis"`
+	AppConfig    `ini:"app"`
+}
+
+type AppConfig struct {
+	JwtKey string `ini:"JwtKey"`
 }
 
 type ServerConfig struct {

@@ -5,6 +5,7 @@ import (
 	"gin-test/controller/article"
 	"gin-test/controller/site"
 	"gin-test/controller/test"
+	"gin-test/middleware"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -45,7 +46,7 @@ func LoadDefault(e *gin.Engine) {
 	e.POST("/article/edit", article.EditArticle)
 
 	//路由组
-	v1 := e.Group("v1").Use(MiddleWare())
+	v1 := e.Group("v1").Use(middleware.JwtToken())
 	{
 		v1.GET("/article/info", article.GetArticle)
 		v1.GET("/article/list", article.GetArticleList)
