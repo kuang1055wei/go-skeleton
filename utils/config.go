@@ -11,17 +11,19 @@ import (
 
 //全局配置
 type Config struct {
-	AppConfig   `ini:"server"`
-	DbConfig    `ini:"database"`
-	LogConfig   `ini:"log"`
-	QiniuConfig `ini:"qiniu"`
-	RedisConfig `ini:"redis"`
+	ServerConfig `ini:"server"`
+	DbConfig     `ini:"database"`
+	LogConfig    `ini:"log"`
+	QiniuConfig  `ini:"qiniu"`
+	RedisConfig  `ini:"redis"`
 }
 
-type AppConfig struct {
-	AppMode  string `ini:"AppMode"`
-	HttpPort string `ini:"HttpPort"`
-	JwtKey   string `ini:"JwtKey"`
+type ServerConfig struct {
+	AppMode      string        `ini:"AppMode"`
+	HttpPort     string        `ini:"HttpPort"`
+	JwtKey       string        `ini:"JwtKey"`
+	ReadTimeout  time.Duration `ini:"ReadTimeout"`
+	WriteTimeout time.Duration `ini:"WriteTimeout"`
 }
 
 //数据库配置

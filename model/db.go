@@ -36,7 +36,7 @@ func InitDb() {
 	)
 	//根据环境选择debug
 	var newLogger logger.Interface
-	if utils.Conf.AppConfig.AppMode == "debug" {
+	if utils.Conf.ServerConfig.AppMode == "debug" {
 		newLogger = logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags),
 			logger.Config{

@@ -7,39 +7,21 @@ import (
 	"gin-test/pkg/gredis"
 	"gin-test/router"
 	"gin-test/utils"
+	"net/http"
+	"time"
 
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
+	"go.uber.org/zap"
+
 	"github.com/gin-gonic/gin"
 )
 
-// 定义中间
-func MiddleWare() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		//t := time.Now()
-		//fmt.Println("中间件开始执行了")
-		// 设置变量到Context的key中，可以通过Get()取
-		//c.Set("request", "中间件")
-		//status := c.Writer.Status()
-		//fmt.Println("中间件执行完毕", status)
-		//t2 := time.Since(t)
-		//fmt.Println("time:", t2)
-	}
-
-}
-
-func main() {
+func init() {
 	//初始化配置文件
 	utils.InitConfig()
 	//redis
 	_ = gredis.Setup()
-
-	r := gin.New()
-	gin.SetMode("debug")
-	store := cookie.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("mysession", store))
-	//r.Use(MiddleWare())
-	//r.LoadHTMLGlob("view/**/*")
+	//翻译
+	_ = utils.InitTrans("zh")
 
 	//自己用zaplog
 	////logger
@@ -63,14 +45,70 @@ func main() {
 		fmt.Printf("init logger failed, err:%v\n", err)
 		return
 	}
-	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	//log结束
-	_ = utils.InitTrans("zh")
 
-	//logger end
-	//加载路由
-	router.LoadDefault(r)
 	//数据库初始化
 	model.InitDb()
-	_ = r.Run(":8000")
+}
+
+func initGin() *gin.Engine {
+	gin.SetMode(utils.Conf.ServerConfig.AppMode)
+	r := gin.New()
+	//session
+	//store, _ := redis.NewStore(
+	//	10,
+	//	"tcp",
+	//	fmt.Sprintf("%s", utils.Conf.RedisConfig.Host),
+	//	utils.Conf.RedisConfig.Password,
+	//	[]byte("secret"),
+	//)
+	//r.Use(sessions.Sessions("mysession", store))
+
+	//r.Use(MiddleWare())
+	//r.LoadHTMLGlob("view/**/*")
+
+	r.Use(logger.GinLogger(), logger.GinRecovery(true))
+
+	//加载路由
+	router.LoadDefault(r)
+	return r
+}
+
+//func main2() {
+//	r := initGin()
+//	_ = r.Run(fmt.Sprintf(":%s", utils.Conf.ServerConfig.HttpPort)) //:8000
+//}
+
+func main() {
+
+	handler := initGin()
+	address := fmt.Sprintf(":%s", utils.Conf.ServerConfig.HttpPort)
+	readTimeout := utils.Conf.ServerConfig.ReadTimeout * time.Second
+	writeTimeout := utils.Conf.ServerConfig.WriteTimeout * time.Second
+	maxHeaderBytes := 1 << 20
+
+	server := &http.Server{
+		Addr:           address,
+		Handler:        handler,
+		ReadTimeout:    readTimeout,
+		WriteTimeout:   writeTimeout,
+		MaxHeaderBytes: maxHeaderBytes,
+	}
+	zap.L().Info(fmt.Sprintf("Listening and serving HTTP on %s\n", address))
+
+	server.ListenAndServe()
+
+	// If you want Graceful Restart, you need a Unix system and download github.com/fvbock/endless
+	//endless.DefaultReadTimeOut = readTimeout
+	//endless.DefaultWriteTimeOut = writeTimeout
+	//endless.DefaultMaxHeaderBytes = maxHeaderBytes
+	//server := endless.NewServer(endPoint, routersInit)
+	//server.BeforeBegin = func(add string) {
+	//	log.Printf("Actual pid is %d", syscall.Getpid())
+	//}
+	//
+	//err := server.ListenAndServe()
+	//if err != nil {
+	//	log.Printf("Server err: %v", err)
+	//}
 }

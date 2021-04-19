@@ -17,6 +17,7 @@ var Ctx = context.Background()
 var RedisClient *redis.Client
 
 func Setup() error {
+
 	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s", utils.Conf.RedisConfig.Host),
 		Password: utils.Conf.RedisConfig.Password, // no password set
