@@ -19,16 +19,23 @@ import (
 
 func GetArticle(c *gin.Context) {
 	var articleInfo model.Article
+	articleMap := make(map[string]interface{})
 	id, _ := strconv.Atoi(c.Query("id"))
 	key := "article:" + strconv.Itoa(id)
 	data, err := gredis.Client.Get(gredis.Ctx, key).Result()
 	if data == "" || err != nil {
 		art := model.Article{}
 		articleInfo, _ = art.GetArticleById(id)
-		cacheValue, _ := json.Marshal(articleInfo)
-		_ = gredis.Client.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
+		if articleInfo != (model.Article{}) {
+			cacheValue, _ := json.Marshal(articleInfo)
+			_ = gredis.Client.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
+			_ = json.Unmarshal(cacheValue, &articleMap)
+		} else {
+			articleMap = nil
+		}
 	} else {
 		_ = json.Unmarshal([]byte(data), &articleInfo)
+		_ = json.Unmarshal([]byte(data), &articleMap)
 	}
 	//测试连接池
 	//var wg sync.WaitGroup
@@ -56,6 +63,7 @@ func GetArticle(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"articleInfo": articleInfo,
+		"articleMap":  articleMap,
 		"redisRes":    redisMap,
 	})
 }
@@ -68,10 +76,13 @@ func GetArticleList(c *gin.Context) {
 	if title != "" {
 		condition["title"] = title
 	}
-	list, total := model.GetArticleList(condition, pageSize, page)
+	list1, total1 := model.GetArticleList(condition, pageSize, page)
+	list, total := model.GetArticleList2(condition, pageSize, page)
 	c.JSON(http.StatusOK, gin.H{
-		"list":  list,
-		"total": total,
+		"list1":  list1,
+		"total1": total1,
+		"list":   list,
+		"total":  total,
 	})
 }
 
