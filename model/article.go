@@ -1,8 +1,6 @@
 package model
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 )
 
@@ -55,7 +53,7 @@ func (obj *Article) GetArticleById(id int) (Article, error) {
 	var result Article
 	err = db.Table(obj.TableName()).Preload("Category").Where("id = ?", id).Find(&result).Error
 	if err != nil {
-		fmt.Println(err)
+		return result, err
 	}
 	//使用gorm.Expr使用表达式
 	db.Model(&result).Where("id = ?", id).UpdateColumn("read_count", gorm.Expr("read_count + ?", 1))

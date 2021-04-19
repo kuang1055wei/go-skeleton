@@ -184,17 +184,17 @@ func getArt(id int) <-chan model.Article {
 }
 
 func uploadImg(c *gin.Context) {
-	file, image, err := c.Request.FormFile("file")
+	file, fileHeader, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"err": err.Error(),
 		})
 	}
-	if image == nil {
+	if fileHeader == nil {
 		return
 	}
 
-	imageName := upload.GetImageName(image.Filename)
+	imageName := upload.GetImageName(fileHeader.Filename)
 	fullPath := upload.GetImageFullPath()
 	savePath := upload.GetImagePath()
 	src := fullPath + imageName
@@ -207,7 +207,7 @@ func uploadImg(c *gin.Context) {
 		return
 	}
 
-	if err := c.SaveUploadedFile(image, src); err != nil {
+	if err := c.SaveUploadedFile(fileHeader, src); err != nil {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
