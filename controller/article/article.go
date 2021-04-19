@@ -77,15 +77,16 @@ func GetArticleList(c *gin.Context) {
 type ArticleForm struct {
 	Title        string `json:"title" form:"title" binding:"required"`
 	Cid          uint64 `json:"cid" form:"cid" binding:"required"`
-	Desc         string `json:"desc" form:"cid" binding:"required"`
-	Content      string `json:"content" form:"cid" binding:"required"`
-	Img          string `json:"img" form:"cid" binding:"required"`
-	CommentCount int64  `json:"comment_count" form:"cid" binding:"required"`
-	ReadCount    int64  `json:"read_count" form:"cid" binding:"required"`
+	Desc         string `json:"desc" form:"desc" binding:"required"`
+	Content      string `json:"content" form:"content" binding:"required"`
+	Img          string `json:"img" form:"img" binding:"required"`
+	CommentCount int64  `json:"comment_count" form:"comment_count" binding:"required"`
+	ReadCount    int64  `json:"read_count" form:"read_count" binding:"required"`
 }
 
 func EditArticle(c *gin.Context) {
 	var artForm ArticleForm
+
 	if err := c.ShouldBind(&artForm); err != nil {
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
@@ -97,6 +98,7 @@ func EditArticle(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"type": 2,
+			"errs": errs,
 			"msg":  utils.RemoveTopStruct(errs.Translate(utils.Trans)),
 		})
 		return
