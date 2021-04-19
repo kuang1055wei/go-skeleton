@@ -74,6 +74,16 @@ func GetArticleList(c *gin.Context) {
 	})
 }
 
+//test json:
+//{
+//	"title": "我是标题",
+//	"cid": 1,
+//	"desc": "descdescdescdesc",
+//	"content": "内容内容内容内容内容内容内容",
+//	"img": "asdadadad",
+//	"comment_count": 1,
+//	"read_count": 1
+//}
 type ArticleForm struct {
 	Title        string `json:"title" form:"title" binding:"required"`
 	Cid          uint64 `json:"cid" form:"cid" binding:"required,lt=10"`
@@ -103,8 +113,10 @@ func EditArticle(c *gin.Context) {
 		})
 		return
 	}
+	json, _ := json.Marshal(artForm)
 	c.JSON(http.StatusOK, gin.H{
 		"article": artForm,
+		"artJson": string(json),
 		"msg":     "success",
 	})
 }
