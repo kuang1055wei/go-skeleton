@@ -76,7 +76,7 @@ func GetArticleList(c *gin.Context) {
 
 type ArticleForm struct {
 	Title        string `json:"title" form:"title" binding:"required"`
-	Cid          uint64 `json:"cid" form:"cid" binding:"required"`
+	Cid          uint64 `json:"cid" form:"cid" binding:"required,lt=10"`
 	Desc         string `json:"desc" form:"desc" binding:"required"`
 	Content      string `json:"content" form:"content" binding:"required"`
 	Img          string `json:"img" form:"img" binding:"required"`
