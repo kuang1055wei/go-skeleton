@@ -28,7 +28,6 @@ func MiddleWare() gin.HandlerFunc {
 		t2 := time.Since(t)
 		fmt.Println("time:", t2)
 	}
-
 }
 func LoadDefault(e *gin.Engine) {
 	e.GET("/", test.Index)
