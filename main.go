@@ -20,7 +20,10 @@ import (
 func init() {
 	//初始化配置文件
 	//utils.InitConfig()
-	config.InitConfig()
+	if err := config.InitConfig(); err != nil {
+		fmt.Printf("load config failed, err:%v\n", err)
+		return
+	}
 
 	//使用自定义的zaplog,且日志归档到文件
 	if err := logger.InitLogger(); err != nil {

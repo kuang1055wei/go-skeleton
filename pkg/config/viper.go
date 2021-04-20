@@ -80,15 +80,14 @@ type RedisConfig struct {
 
 var Conf = new(Config)
 
-func InitConfig()  {
+func InitConfig() error  {
 	//env := os.Getenv("env")
 	viper.SetConfigName("config")
 	viper.SetConfigType("ini")
 	viper.AddConfigPath("./config")
 	err := viper.ReadInConfig()
 	if err != nil {
-		fmt.Printf("load ini failed, err:%v\n", err)
-		return
+		return err
 	}
 	_ = viper.Unmarshal(&Conf)
 	viper.WatchConfig()//监听配置文件改动
@@ -100,4 +99,6 @@ func InitConfig()  {
 	//viper.AddRemoteProvider("etcd", "http://127.0.0.1:4001","/config/hugo.json")
 	//viper.SetConfigType("json") // because there is no file extension in a stream of bytes, supported extensions are "json", "toml", "yaml", "yml", "properties", "props", "prop", "env", "dotenv"
 	//err := viper.ReadRemoteConfig()
+
+	return nil
 }
