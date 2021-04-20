@@ -10,6 +10,7 @@ import (
 	"gin-test/router"
 	"gin-test/utils"
 	"net/http"
+	"os"
 	"time"
 
 	"go.uber.org/zap"
@@ -22,6 +23,7 @@ func init() {
 	//utils.InitConfig()
 	if err := config.InitConfig(); err != nil {
 		fmt.Printf("load config failed, err:%v\n", err)
+		os.Exit(0)
 		return
 	}
 
@@ -35,12 +37,14 @@ func init() {
 	//redis
 	if err := gredis.InitRedis();err!=nil{
 		fmt.Printf("init redis failed, err:%v\n", err)
+		os.Exit(0)
 		return
 	}
 
 	//数据库初始化
 	if err := model.InitDb();err!=nil{
 		fmt.Printf("连接数据库失败，请检查参数:%v\n", err)
+		os.Exit(0)
 		return
 	}
 
