@@ -21,27 +21,6 @@ func init() {
 	//初始化配置文件
 	//utils.InitConfig()
 	config.InitConfig()
-	//redis
-	_ = gredis.InitRedis()
-	//翻译
-	_ = utils.InitTrans("zh")
-
-	//自己用zaplog
-	////logger
-	//	"github.com/gin-contrib/zap"
-	//logger, _ := zap.NewProduction()
-	////替换zap包中全局的logger实例，后续在其他包中只需使用zap.L()调用即可
-	//zap.ReplaceGlobals(logger)
-	//// Add a ginzap middleware, which:
-	////   - Logs all requests, like a combined access and error log.
-	////   - Logs to stdout.
-	////   - RFC3339 with UTC time format.
-	//r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
-	//
-	//// Logs all panic to error log
-	////   - stack means whether output the stack info.
-	//r.Use(ginzap.RecoveryWithZap(logger, true))
-	////zaplog结束
 
 	//使用自定义的zaplog,且日志归档到文件
 	if err := logger.InitLogger(); err != nil {
@@ -50,8 +29,20 @@ func init() {
 	}
 	//log结束
 
+	//redis
+	if err := gredis.InitRedis();err!=nil{
+		fmt.Printf("init redis failed, err:%v\n", err)
+		return
+	}
+
 	//数据库初始化
-	model.InitDb()
+	if err := model.InitDb();err!=nil{
+		fmt.Printf("连接数据库失败，请检查参数:%v\n", err)
+		return
+	}
+
+	//翻译
+	_ = utils.InitTrans("zh")
 }
 
 func initGin() *gin.Engine {

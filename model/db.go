@@ -19,7 +19,7 @@ import (
 var db *gorm.DB
 var err error
 
-func InitDb() {
+func InitDb() error {
 	//dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 	//	config.Conf.DbUser,
 	//	config.Conf.DbPassWord,
@@ -64,8 +64,7 @@ func InitDb() {
 	})
 
 	if err != nil {
-		fmt.Println("连接数据库失败，请检查参数：", err)
-		os.Exit(1)
+		return err
 	}
 
 	db.Use(
@@ -89,4 +88,5 @@ func InitDb() {
 	//// SetConnMaxLifetiment 设置连接的最大可复用时间。
 	//sqlDB.SetConnMaxLifetime(10 * time.Second)
 
+	return nil
 }
