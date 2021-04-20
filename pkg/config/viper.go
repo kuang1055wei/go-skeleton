@@ -81,6 +81,9 @@ type RedisConfig struct {
 var Conf = new(Config)
 
 func InitConfig() error  {
+	//env := pflag.String("env" , "dev" , "环境变量: dev | test | product")
+	//pflag.Parse()
+	//fmt.Printf("%+v\n",*env)
 	//env := os.Getenv("env")
 	viper.SetConfigName("config")
 	viper.SetConfigType("ini")
