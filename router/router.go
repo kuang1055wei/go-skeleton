@@ -45,7 +45,7 @@ func LoadDefault(e *gin.Engine) {
 	e.GET("/article/myChan", article.MyChan)
 	e.POST("/article/edit", article.EditArticle)
 	e.GET("/article/search", article.SearchArticle)
-
+	e.POST("/article/uploadImg" , article.UploadImg)
 	//路由组
 	v1 := e.Group("v1").Use(middleware.JwtToken())
 	{

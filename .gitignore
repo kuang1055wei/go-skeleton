@@ -17,3 +17,4 @@ app.log
 vendor/
 
 /tmp/
+/runtime/*

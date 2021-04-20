@@ -30,8 +30,6 @@ func GetArticle(c *gin.Context) {
 			cacheValue, _ := json.Marshal(articleInfo)
 			_ = gredis.Client.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
 			_ = json.Unmarshal(cacheValue, &articleMap)
-		} else {
-			articleMap = nil
 		}
 	} else {
 		_ = json.Unmarshal([]byte(data), &articleInfo)
@@ -207,14 +205,32 @@ func getArt(id int) <-chan model.Article {
 	return artChan
 }
 
-func uploadImg(c *gin.Context) {
+//func UploadImg(c *gin.Context)  {
+//	file, err := c.FormFile("file")
+//	if err != nil {
+//		c.JSON(http.StatusOK , gin.H{
+//			"err":err.Error(),
+//		})
+//		return
+//	}
+//	// c.JSON(200, gin.H{"message": file.Header.Context})
+//	c.SaveUploadedFile(file, file.Filename)
+//	c.String(http.StatusOK, file.Filename)
+//}
+
+func UploadImg(c *gin.Context) {
 	file, fileHeader, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
+			"err1":err,
 			"err": err.Error(),
 		})
+		return
 	}
 	if fileHeader == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res":1,
+		})
 		return
 	}
 
@@ -222,16 +238,26 @@ func uploadImg(c *gin.Context) {
 	fullPath := upload.GetImageFullPath()
 	savePath := upload.GetImagePath()
 	src := fullPath + imageName
+
 	if !upload.CheckImageExt(imageName) || !upload.CheckImageSize(file) {
+		c.JSON(http.StatusOK, gin.H{
+			"res":2,
+		})
 		return
 	}
 
 	err = upload.CheckImage(fullPath)
 	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res":3,
+		})
 		return
 	}
 
 	if err := c.SaveUploadedFile(fileHeader, src); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res":4,
+		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
