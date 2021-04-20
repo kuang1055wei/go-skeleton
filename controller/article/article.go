@@ -110,13 +110,14 @@ func SearchArticle(c *gin.Context) {
 //	"read_count": 1
 //}
 type ArticleForm struct {
+	Id int `json:"id" form:"id" binding:"numeric"`
 	Title        string `json:"title" form:"title" binding:"required"`
 	Cid          uint64 `json:"cid" form:"cid" binding:"required,lt=10"`
 	Desc         string `json:"desc" form:"desc" binding:"required"`
 	Content      string `json:"content" form:"content" binding:"required"`
 	Img          string `json:"img" form:"img" binding:"required"`
-	CommentCount int64  `json:"comment_count" form:"comment_count" binding:"required"`
-	ReadCount    int64  `json:"read_count" form:"read_count" binding:"required"`
+	//CommentCount int64  `json:"comment_count" form:"comment_count" binding:"required"`
+	//ReadCount    int64  `json:"read_count" form:"read_count" binding:"required"`
 }
 
 func EditArticle(c *gin.Context) {
@@ -139,10 +140,15 @@ func EditArticle(c *gin.Context) {
 		return
 	}
 	jsonStr, _ := json.Marshal(artForm)
+	var art model.Article
+	json.Unmarshal(jsonStr , &art)
+	result , err := model.EditArticle(int(art.ID), &art)
 	c.JSON(http.StatusOK, gin.H{
 		"article": artForm,
 		"artJson": string(jsonStr),
 		"msg":     "success",
+		"result":result,
+		"err":err,
 	})
 }
 

@@ -168,10 +168,13 @@ func EditArticle(id int, data *Article) (bool, error) {
 	column["desc"] = data.Desc
 	column["content"] = data.Content
 	column["img"] = data.Img
-	err = db.Model(&art).Where("id=?", id).Updates(column).Error
-	if err != nil {
-		return false, err
+	result := db.Debug().Model(&art).Where("id=?", id).Updates(column)
+	if result.Error != nil {
+		return false, result.Error
 	}
+	//if result.Error.(ErrRecordNotFound) {
+	//
+	//}
 	return true, nil
 }
 

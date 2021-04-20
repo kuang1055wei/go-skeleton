@@ -35,11 +35,9 @@ func SetToken(username string) (string, int) {
 		return "", errmsg.ERROR
 	}
 	return token, errmsg.SUCCSE
-
 }
 
 // 验证token
-
 func CheckToken(token string) (*MyClaims, int) {
 	var claims MyClaims
 
