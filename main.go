@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"gin-test/logger"
 	"gin-test/model"
-	"gin-test/pkg/configloader"
+	"gin-test/pkg/config"
 	"gin-test/pkg/gredis"
+	"gin-test/pkg/upload"
 	"gin-test/router"
 	"gin-test/utils"
 	"net/http"
@@ -18,10 +19,10 @@ import (
 
 func init() {
 	//初始化配置文件
-	utils.InitConfig()
-	configloader.InitConfig()
+	//utils.InitConfig()
+	config.InitConfig()
 	//redis
-	_ = gredis.Setup()
+	_ = gredis.InitRedis()
 	//翻译
 	_ = utils.InitTrans("zh")
 
@@ -54,8 +55,11 @@ func init() {
 }
 
 func initGin() *gin.Engine {
-	gin.SetMode(utils.Conf.ServerConfig.AppMode)
+	gin.SetMode(config.Conf.ServerConfig.AppMode)
 	r := gin.New()
+	//r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
+	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
+	//r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
 	//session
 	//store, _ := redis.NewStore(
 	//	10,
@@ -84,9 +88,9 @@ func initGin() *gin.Engine {
 func main() {
 
 	handler := initGin()
-	address := fmt.Sprintf(":%s", utils.Conf.ServerConfig.HttpPort)
-	readTimeout := utils.Conf.ServerConfig.ReadTimeout * time.Second
-	writeTimeout := utils.Conf.ServerConfig.WriteTimeout * time.Second
+	address := fmt.Sprintf(":%s", config.Conf.ServerConfig.HttpPort)
+	readTimeout := config.Conf.ServerConfig.ReadTimeout * time.Second
+	writeTimeout := config.Conf.ServerConfig.WriteTimeout * time.Second
 	maxHeaderBytes := 1 << 20 //1048576 = 1mb
 
 	server := &http.Server{

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"gin-test/model"
-	"gin-test/pkg/configloader"
+	"gin-test/pkg/config"
 	"gin-test/pkg/gredis"
 	"gin-test/pkg/upload"
 	"gin-test/utils"
@@ -275,11 +275,11 @@ func ViperTest(c *gin.Context)  {
 	optStr,_ := json.Marshal(opt)
 	fmt.Printf("%+v" , opt)
 	c.JSON(200 , gin.H{
-		"database":viper.GetViper().Sub("database"),
-		"appSize":viper.GetViper().Get("app.PageSize"),
+		"database":  viper.GetViper().Sub("database"),
+		"appSize":   viper.GetViper().Get("app.PageSize"),
 		"viperTest": viper.GetViper().Get("app.PageSize"),
-		"allviper":viper.GetViper().AllSettings(),
-		"redis":string(optStr),
-		"config":configloader.Conf,
+		"allviper":  viper.GetViper().AllSettings(),
+		"redis":     string(optStr),
+		"config":    config.Conf,
 	})
 }

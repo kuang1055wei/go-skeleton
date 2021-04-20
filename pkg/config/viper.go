@@ -1,4 +1,4 @@
-package configloader
+package config
 
 import (
 	"fmt"
@@ -16,6 +16,7 @@ type Config struct {
 	QiniuConfig  `mapstructure:"qiniu"`
 	RedisConfig  `mapstructure:"redis"`
 	AppConfig    `mapstructure:"app"`
+	//Other map[string]interface{} `mapstructure:",remain"`
 }
 
 type AppConfig struct {
@@ -91,7 +92,6 @@ func InitConfig()  {
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		zap.L().Info(fmt.Sprintf("配置文件修改成功:%s" , in.Name))
 		_ = viper.Unmarshal(Conf)
-		fmt.Println(Conf.AppConfig.JwtKey)
 	})
 	//配置中心示例
 	//viper.AddRemoteProvider("etcd", "http://127.0.0.1:4001","/config/hugo.json")

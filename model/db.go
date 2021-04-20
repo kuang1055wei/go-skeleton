@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"gin-test/utils"
+	"gin-test/pkg/config"
 	"log"
 	"os"
 	"time"
@@ -28,15 +28,15 @@ func InitDb() {
 	//	config.Conf.DbName,
 	//)
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		utils.Conf.DbConfig.DbUser,
-		utils.Conf.DbConfig.DbPassWord,
-		utils.Conf.DbConfig.DbHost,
-		utils.Conf.DbConfig.DbPort,
-		utils.Conf.DbConfig.DbName,
+		config.Conf.DbConfig.DbUser,
+		config.Conf.DbConfig.DbPassWord,
+		config.Conf.DbConfig.DbHost,
+		config.Conf.DbConfig.DbPort,
+		config.Conf.DbConfig.DbName,
 	)
 	//根据环境选择debug
 	var newLogger logger.Interface
-	if utils.Conf.ServerConfig.AppMode == "debug" {
+	if config.Conf.ServerConfig.AppMode == "debug" {
 		newLogger = logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags),
 			logger.Config{

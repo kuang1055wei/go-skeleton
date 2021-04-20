@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"gin-test/utils"
+	"gin-test/pkg/config"
 	"gin-test/utils/errmsg"
 	"net/http"
 	"strings"
@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var JwtKey = []byte(utils.Conf.AppConfig.JwtKey)
+var JwtKey = []byte(config.Conf.AppConfig.JwtKey)
 
 type MyClaims struct {
 	Username string `json:"username"`

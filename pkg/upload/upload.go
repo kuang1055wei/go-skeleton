@@ -2,6 +2,7 @@ package upload
 
 import (
 	"fmt"
+	"gin-test/pkg/config"
 	"gin-test/pkg/file"
 	"gin-test/utils"
 	"mime/multipart"
@@ -12,7 +13,7 @@ import (
 
 // GetImageFullUrl get the full access path
 func GetImageFullUrl(name string) string {
-	return utils.Conf.AppConfig.PrefixUrl + "/" + GetImagePath() + name
+	return config.Conf.AppConfig.PrefixUrl + "/" + GetImagePath() + name
 }
 
 // GetImageName get image name
@@ -26,18 +27,18 @@ func GetImageName(name string) string {
 
 // GetImagePath get save path
 func GetImagePath() string {
-	return utils.Conf.AppConfig.ImageSavePath
+	return config.Conf.AppConfig.ImageSavePath
 }
 
 // GetImageFullPath get full save path
 func GetImageFullPath() string {
-	return utils.Conf.AppConfig.RuntimeRootPath + GetImagePath()
+	return config.Conf.AppConfig.RuntimeRootPath + GetImagePath()
 }
 
 // CheckImageExt check image file ext
 func CheckImageExt(fileName string) bool {
 	ext := file.GetExt(fileName)
-	for _, allowExt := range utils.Conf.AppConfig.ImageAllowExts {
+	for _, allowExt := range config.Conf.AppConfig.ImageAllowExts {
 		if strings.ToUpper(allowExt) == strings.ToUpper(ext) {
 			return true
 		}
@@ -52,7 +53,7 @@ func CheckImageSize(f multipart.File) bool {
 	if err != nil {
 		return false
 	}
-	return size <= utils.Conf.AppConfig.ImageMaxSize*1024*1024
+	return size <= config.Conf.AppConfig.ImageMaxSize*1024*1024
 }
 
 // CheckImage check if the file exists
