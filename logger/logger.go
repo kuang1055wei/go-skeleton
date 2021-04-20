@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"fmt"
+	"gin-test/pkg/config"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -39,6 +41,20 @@ func InitLogger() (err error) {
 	return
 }
 
+func getLogFilePath() string {
+	return fmt.Sprintf("%s%s", config.Conf.AppConfig.RuntimeRootPath, config.Conf.LogConfig.LogSavePath)
+}
+
+// getLogFileName get the save name of the log file
+func getLogFileName() string {
+	logSrc := strings.Split(config.Conf.LogConfig.Filename , ".")
+	return fmt.Sprintf("%s%s.%s",
+		logSrc[0],
+		time.Now().Format(config.Conf.LogConfig.TimeFormat),
+		logSrc[1],
+	)
+}
+
 func getEncoder() zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
@@ -49,9 +65,10 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewJSONEncoder(encoderConfig)
 }
 
+
 func getLogWriter(filename string, maxSize, maxBackup, maxAge int) zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   filename,
+		Filename:   getLogFilePath()+"/"+getLogFileName(),
 		MaxSize:    maxSize,
 		MaxBackups: maxBackup,
 		MaxAge:     maxAge,

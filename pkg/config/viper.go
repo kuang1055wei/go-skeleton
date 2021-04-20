@@ -59,6 +59,8 @@ type LogConfig struct {
 	MaxSize    int    `mapstructure:"MaxSize"`
 	MaxAge     int    `mapstructure:"MaxAge"`
 	MaxBackups int    `mapstructure:"MaxBackups"`
+	LogSavePath string `mapstructure:"LogSavePath"`
+	TimeFormat string `mapstructure:"TimeFormat"`
 }
 
 type QiniuConfig struct {
@@ -79,6 +81,7 @@ type RedisConfig struct {
 var Conf = new(Config)
 
 func InitConfig()  {
+	//env := os.Getenv("env")
 	viper.SetConfigName("config")
 	viper.SetConfigType("ini")
 	viper.AddConfigPath("./config")
@@ -87,7 +90,7 @@ func InitConfig()  {
 		fmt.Printf("load ini failed, err:%v\n", err)
 		return
 	}
-	_ = viper.Unmarshal(Conf)
+	_ = viper.Unmarshal(&Conf)
 	viper.WatchConfig()//监听配置文件改动
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		zap.L().Info(fmt.Sprintf("配置文件修改成功:%s" , in.Name))
