@@ -46,6 +46,7 @@ func LoadDefault(e *gin.Engine) {
 	e.POST("/article/edit", article.EditArticle)
 	e.GET("/article/search", article.SearchArticle)
 	e.POST("/article/uploadImg" , article.UploadImg)
+	e.GET("/article/viperTest" , article.ViperTest)
 	//路由组
 	v1 := e.Group("v1").Use(middleware.JwtToken())
 	{

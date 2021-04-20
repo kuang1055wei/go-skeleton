@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gin-test/logger"
 	"gin-test/model"
+	"gin-test/pkg/configloader"
 	"gin-test/pkg/gredis"
 	"gin-test/router"
 	"gin-test/utils"
@@ -18,6 +19,7 @@ import (
 func init() {
 	//初始化配置文件
 	utils.InitConfig()
+	configloader.InitConfig()
 	//redis
 	_ = gredis.Setup()
 	//翻译

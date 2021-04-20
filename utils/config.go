@@ -72,9 +72,9 @@ type QiniuConfig struct {
 type RedisConfig struct {
 	Host        string        `ini:"Host"`
 	Password    string        `ini:"Password"`
-	MaxIdle     int           `init:"MaxIdle"`
-	MaxActive   int           `init:"MaxActive"`
-	IdleTimeout time.Duration `init:"IdleTimeout"`
+	MaxIdle     int           `ini:"MaxIdle"`
+	MaxActive   int           `ini:"MaxActive"`
+	IdleTimeout time.Duration `ini:"IdleTimeout"`
 }
 
 var Conf = new(Config)

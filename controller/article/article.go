@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"gin-test/model"
+	"gin-test/pkg/configloader"
 	"gin-test/pkg/gredis"
 	"gin-test/pkg/upload"
 	"gin-test/utils"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -174,6 +176,7 @@ func MyHttp(c *gin.Context) {
 
 //测试协程拉取
 func MyChan(c *gin.Context) {
+
 	id1, _ := strconv.Atoi(c.DefaultQuery("id1", "3"))
 	id2, _ := strconv.Atoi(c.DefaultQuery("id2", "4"))
 	art1Chan := getArt(id1)
@@ -185,7 +188,7 @@ func MyChan(c *gin.Context) {
 	data["art1"] = art1
 	data["art2"] = art2
 	c.JSON(http.StatusOK, gin.H{
-		"data": data,
+		"data":      data,
 	})
 	//ctx := context.Background()
 	//context.WithCancel(ctx)
@@ -265,4 +268,18 @@ func UploadImg(c *gin.Context) {
 		"image_save_url": savePath + imageName,
 	})
 
+}
+
+func ViperTest(c *gin.Context)  {
+	opt := gredis.Client.Options()
+	optStr,_ := json.Marshal(opt)
+	fmt.Printf("%+v" , opt)
+	c.JSON(200 , gin.H{
+		"database":viper.GetViper().Sub("database"),
+		"appSize":viper.GetViper().Get("app.PageSize"),
+		"viperTest": viper.GetViper().Get("app.PageSize"),
+		"allviper":viper.GetViper().AllSettings(),
+		"redis":string(optStr),
+		"config":configloader.Conf,
+	})
 }
