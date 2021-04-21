@@ -128,6 +128,7 @@ func main() {
 	}
 	log.Println("Server exiting")
 
+
 	// 默认endless服务器会监听下列信号：
 	//	"github.com/fvbock/endless"
 	// syscall.SIGHUP，syscall.SIGUSR1，syscall.SIGUSR2，syscall.SIGINT，syscall.SIGTERM和syscall.SIGTSTP
@@ -135,7 +136,10 @@ func main() {
 	// 接收到 syscall.SIGINT或syscall.SIGTERM 信号将触发优雅关机
 	// 接收到 SIGUSR2 信号将触发HammerTime
 	// SIGUSR1 和 SIGTSTP 被用来触发一些用户自定义的hook函数
-	//if err := endless.ListenAndServe(":8080", router); err!=nil{
+	//endless.DefaultReadTimeOut = readTimeout
+	//endless.DefaultWriteTimeOut = writeTimeout
+	//endless.DefaultMaxHeaderBytes = maxHeaderBytes
+	//if err := endless.ListenAndServe(address , handler); err!=nil{
 	//	log.Fatalf("listen: %s\n", err)
 	//}
 }
