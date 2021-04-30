@@ -216,9 +216,9 @@ func getArt(id int) <-chan model.Article {
 	return artChan
 }
 
-func demoFunc()  {
-	time.Sleep(10 * time.Millisecond)
-	fmt.Println("Hello word")
+func demoFunc(i int)  {
+	time.Sleep(1 * time.Second)
+	fmt.Printf("Hello word %d\n" , i)
 }
 
 //使用ants
@@ -230,16 +230,24 @@ func MyChan2(c *gin.Context)  {
 	//	demoFunc()
 	//	wg.Done()
 	//}
+	pool,_ := ants.NewPool(10)
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
-		_ = ants.Submit(func() {
-			demoFunc()
+		//使用自定义池
+		_ = pool.Submit(func() {
+			demoFunc(i)
 			wg.Done()
 		})
+		//使用默认池
+		//_ = ants.Submit(func() {
+		//	demoFunc()
+		//	wg.Done()
+		//})
 	}
 	wg.Wait()
 	fmt.Printf("running goroutines: %d\n", ants.Running())
 	fmt.Printf("finish all tasks.\n")
+
 }
 
 //func UploadImg(c *gin.Context)  {
