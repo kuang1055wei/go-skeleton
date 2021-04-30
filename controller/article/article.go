@@ -8,10 +8,12 @@ import (
 	"gin-test/pkg/gredis"
 	"gin-test/pkg/upload"
 	"gin-test/utils"
+	"github.com/panjf2000/ants/v2"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -212,6 +214,32 @@ func getArt(id int) <-chan model.Article {
 		artChan <- art
 	}(id)
 	return artChan
+}
+
+func demoFunc()  {
+	time.Sleep(10 * time.Millisecond)
+	fmt.Println("Hello word")
+}
+
+//使用ants
+//https://github.com/panjf2000/ants/blob/master/README_ZH.md
+func MyChan2(c *gin.Context)  {
+	defer ants.Release()
+	var wg sync.WaitGroup
+	//syncCalculateSum := func() {
+	//	demoFunc()
+	//	wg.Done()
+	//}
+	for i := 0; i < 100; i++ {
+		wg.Add(1)
+		_ = ants.Submit(func() {
+			demoFunc()
+			wg.Done()
+		})
+	}
+	wg.Wait()
+	fmt.Printf("running goroutines: %d\n", ants.Running())
+	fmt.Printf("finish all tasks.\n")
 }
 
 //func UploadImg(c *gin.Context)  {

@@ -88,7 +88,6 @@ func initGin() *gin.Engine {
 //}
 
 func main() {
-
 	handler := initGin()
 	address := fmt.Sprintf(":%s", config.Conf.ServerConfig.HttpPort)
 	readTimeout := config.Conf.ServerConfig.ReadTimeout * time.Second
