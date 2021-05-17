@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/golang-module/carbon"
-	"time"
 
 	"gorm.io/gorm"
 )

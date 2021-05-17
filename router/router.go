@@ -38,7 +38,7 @@ func LoadDefault(e *gin.Engine) {
 	e.GET("/site/hello", site.Hello)
 	e.POST("/site/login", site.Login)
 
-	e.GET("/article/info", article.GetArticle)
+	e.Use(middleware.RateLimitMiddleware(time.Second,100)).GET("/article/info", article.GetArticle)
 	e.GET("/article/list", article.GetArticleList)
 	e.GET("/article/myHttp", article.MyHttp)
 	e.GET("/article/myChan", article.MyChan)
