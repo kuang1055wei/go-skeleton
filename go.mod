@@ -12,6 +12,7 @@ require (
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.2.0
 	github.com/go-redis/redis/v8 v8.8.2
+	github.com/golang-module/carbon v1.3.7
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/panjf2000/ants/v2 v2.4.4
 	github.com/pkg/errors v0.8.1
