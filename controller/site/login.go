@@ -2,6 +2,8 @@ package site
 
 import (
 	"fmt"
+	"gin-test/middleware"
+	"gin-test/utils/errmsg"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +18,13 @@ func Login(c *gin.Context) {
 	var form LoginForm
 	if c.ShouldBind(&form) == nil {
 		if form.User == "user" && form.Password == "password" {
-			c.JSON(200, gin.H{"status": "you are logged in"})
+			token, code := middleware.SetToken(1, "kw")
+			if code == errmsg.ERROR {
+				c.JSON(401, gin.H{"status": "login fail,generate token fail"})
+			}
+			c.JSON(200, gin.H{
+				"token": token,
+			})
 		} else {
 			c.JSON(401, gin.H{"status": "unauthorized"})
 		}

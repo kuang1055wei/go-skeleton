@@ -14,16 +14,18 @@ import (
 var JwtKey = []byte(config.Conf.AppConfig.JwtKey)
 
 type MyClaims struct {
+	Id       int    `json:"id"`
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
 // 生成token
-func SetToken(username string) (string, int) {
+func SetToken(id int, username string) (string, int) {
 	expireTime := time.Now().Add(7 * 24 * time.Hour)
 	SetClaims := MyClaims{
-		username,
-		jwt.StandardClaims{
+		Id:       id,
+		Username: username,
+		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "ginblog",
 		},
@@ -91,7 +93,7 @@ func JwtToken() gin.HandlerFunc {
 			return
 		}
 
-		if len(checkToken) != 2 && checkToken[0] != "Bearer" {
+		if len(checkToken) != 2 || checkToken[0] != "Bearer" {
 			code = errmsg.ERROR_TOKEN_TYPE_WRONG
 			c.JSON(http.StatusOK, gin.H{
 				"status":  code,
@@ -110,7 +112,8 @@ func JwtToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Set("username", key)
+		c.Set("id", key.Id)
+		c.Set("username", key.Username)
 		c.Next()
 	}
 }
