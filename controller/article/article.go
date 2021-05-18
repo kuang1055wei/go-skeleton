@@ -64,6 +64,8 @@ func GetArticle(c *gin.Context) {
 	redisMap["poolStatus"] = gredis.Client.PoolStats()
 
 	c.JSON(http.StatusOK, gin.H{
+		"uid":         c.GetInt("uid"),
+		"username":    c.GetString("username"),
 		"articleInfo": articleInfo,
 		"articleMap":  articleMap,
 		"redisRes":    redisMap,

@@ -112,7 +112,7 @@ func JwtToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		c.Set("id", key.Id)
+		c.Set("uid", key.Id)
 		c.Set("username", key.Username)
 		c.Next()
 	}
