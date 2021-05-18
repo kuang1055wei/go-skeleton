@@ -71,6 +71,9 @@ func GetArticle(c *gin.Context) {
 }
 
 func GetArticleList(c *gin.Context) {
+	//params := model.NewQueryParams(c)
+	//params.LikeByReq("title").PageByReq().Desc("id")
+
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	title := c.Query("title")
@@ -112,12 +115,12 @@ func SearchArticle(c *gin.Context) {
 //	"read_count": 1
 //}
 type ArticleForm struct {
-	Id int `json:"id" form:"id" binding:"numeric"`
-	Title        string `json:"title" form:"title" binding:"required"`
-	Cid          uint64 `json:"cid" form:"cid" binding:"required,lt=10"`
-	Desc         string `json:"desc" form:"desc" binding:"required"`
-	Content      string `json:"content" form:"content" binding:"required"`
-	Img          string `json:"img" form:"img" binding:"required"`
+	Id      int    `json:"id" form:"id" binding:"numeric"`
+	Title   string `json:"title" form:"title" binding:"required"`
+	Cid     uint64 `json:"cid" form:"cid" binding:"required,lt=10"`
+	Desc    string `json:"desc" form:"desc" binding:"required"`
+	Content string `json:"content" form:"content" binding:"required"`
+	Img     string `json:"img" form:"img" binding:"required"`
 	//CommentCount int64  `json:"comment_count" form:"comment_count" binding:"required"`
 	//ReadCount    int64  `json:"read_count" form:"read_count" binding:"required"`
 }
@@ -143,14 +146,14 @@ func EditArticle(c *gin.Context) {
 	}
 	jsonStr, _ := json.Marshal(artForm)
 	var art model.Article
-	json.Unmarshal(jsonStr , &art)
-	result , err := model.EditArticle(int(art.ID), &art)
+	json.Unmarshal(jsonStr, &art)
+	result, err := model.EditArticle(int(art.ID), &art)
 	c.JSON(http.StatusOK, gin.H{
 		"article": artForm,
 		"artJson": string(jsonStr),
 		"msg":     "success",
-		"result":result,
-		"err":err,
+		"result":  result,
+		"err":     err,
 	})
 }
 
@@ -196,7 +199,7 @@ func MyChan(c *gin.Context) {
 	data["art1"] = art1
 	data["art2"] = art2
 	c.JSON(http.StatusOK, gin.H{
-		"data":      data,
+		"data": data,
 	})
 	//ctx := context.Background()
 	//context.WithCancel(ctx)
@@ -216,21 +219,21 @@ func getArt(id int) <-chan model.Article {
 	return artChan
 }
 
-func demoFunc(i int)  {
+func demoFunc(i int) {
 	time.Sleep(1 * time.Second)
-	fmt.Printf("Hello word %d\n" , i)
+	fmt.Printf("Hello word %d\n", i)
 }
 
 //使用ants
 //https://github.com/panjf2000/ants/blob/master/README_ZH.md
-func MyChan2(c *gin.Context)  {
+func MyChan2(c *gin.Context) {
 	defer ants.Release()
 	var wg sync.WaitGroup
 	//syncCalculateSum := func() {
 	//	demoFunc()
 	//	wg.Done()
 	//}
-	pool,_ := ants.NewPool(10)
+	pool, _ := ants.NewPool(10)
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		//使用自定义池
@@ -267,14 +270,14 @@ func UploadImg(c *gin.Context) {
 	file, fileHeader, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"err1":err,
-			"err": err.Error(),
+			"err1": err,
+			"err":  err.Error(),
 		})
 		return
 	}
 	if fileHeader == nil {
 		c.JSON(http.StatusOK, gin.H{
-			"res":1,
+			"res": 1,
 		})
 		return
 	}
@@ -286,7 +289,7 @@ func UploadImg(c *gin.Context) {
 
 	if !upload.CheckImageExt(imageName) || !upload.CheckImageSize(file) {
 		c.JSON(http.StatusOK, gin.H{
-			"res":2,
+			"res": 2,
 		})
 		return
 	}
@@ -294,14 +297,14 @@ func UploadImg(c *gin.Context) {
 	err = upload.CheckImage(fullPath)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"res":3,
+			"res": 3,
 		})
 		return
 	}
 
 	if err := c.SaveUploadedFile(fileHeader, src); err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"res":4,
+			"res": 4,
 		})
 		return
 	}
@@ -312,11 +315,11 @@ func UploadImg(c *gin.Context) {
 
 }
 
-func ViperTest(c *gin.Context)  {
+func ViperTest(c *gin.Context) {
 	opt := gredis.Client.Options()
-	optStr,_ := json.Marshal(opt)
-	fmt.Printf("%+v" , opt)
-	c.JSON(200 , gin.H{
+	optStr, _ := json.Marshal(opt)
+	fmt.Printf("%+v", opt)
+	c.JSON(200, gin.H{
 		"database":  viper.GetViper().Sub("database"),
 		"appSize":   viper.GetViper().Get("app.PageSize"),
 		"viperTest": viper.GetViper().Get("app.PageSize"),

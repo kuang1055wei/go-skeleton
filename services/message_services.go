@@ -61,7 +61,7 @@ func (s *messageService) Consume() {
 				messageLog.Info("处理消息", zap.Int64("FromId", msg.FromId), zap.Int64("toId:", msg.UserId))
 
 				//if err := s.Create(msg); err != nil {
-				//	messageLog.Info("创建消息发生异常...", err)
+				//	messageLog.Info("创建消息发article/list生异常...", err)
 				//} else {
 				//	s.SendEmailNotice(msg)
 				//}
