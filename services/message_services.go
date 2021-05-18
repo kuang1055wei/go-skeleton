@@ -4,7 +4,6 @@ import (
 	"gin-test/model"
 	"gin-test/model/date"
 	"go.uber.org/zap"
-	"strconv"
 	"sync"
 )
 
@@ -22,7 +21,6 @@ type messageService struct {
 	messagesChan        chan *model.Message
 	messagesConsumeOnce sync.Once
 }
-
 
 // 生产，将消息数据放入chan
 func (s *messageService) Produce(fromId, toId int64, title, content, quoteContent string, msgType int, extraDataMap map[string]interface{}) {
@@ -60,7 +58,7 @@ func (s *messageService) Consume() {
 			messageLog.Info("开始消费系统消息...")
 			for {
 				msg := <-s.messagesChan
-				messageLog.Info("处理消息：from="+strconv.Itoa(int(msg.FromId))+" to="+strconv.Itoa(int(msg.FromId)))
+				messageLog.Info("处理消息", zap.Int64("FromId", msg.FromId), zap.Int64("toId:", msg.UserId))
 
 				//if err := s.Create(msg); err != nil {
 				//	messageLog.Info("创建消息发生异常...", err)
