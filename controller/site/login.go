@@ -2,8 +2,9 @@ package site
 
 import (
 	"fmt"
-	"gin-test/middleware"
-	"gin-test/utils/errmsg"
+	"gin-test/services"
+	"gin-test/utils"
+	"gin-test/utils/auth"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,20 +18,55 @@ type LoginForm struct {
 func Login(c *gin.Context) {
 	var form LoginForm
 	if c.ShouldBind(&form) == nil {
+		//真实情况应该这里是登陆验证逻辑
 		if form.User == "user" && form.Password == "password" {
-			token, code := middleware.SetToken(1, "kw")
-			if code == errmsg.ERROR {
-				c.JSON(401, gin.H{"status": "login fail,generate token fail"})
+			uid := 1
+			token, err := auth.GenerateToken(uid)
+			if err != nil {
+				c.JSON(200, utils.JsonError(err))
+				return
 			}
-			c.JSON(200, gin.H{
-				"token": token,
-			})
+			//refreshToken应该放入数据库或者缓存中
+			refreshToken, err := services.UserTokenService.GenerateRefreshToken(int64(uid))
+			if err != nil {
+				c.JSON(200, utils.JsonError(err))
+				return
+			}
+
+			c.JSON(200, utils.JsonData(gin.H{
+				"refreshToken": refreshToken,
+				"token":        token,
+			}))
+			return
 		} else {
-			c.JSON(401, gin.H{"status": "unauthorized"})
+			c.JSON(200, utils.JsonErrorMsg("unauthorized"))
+			return
 		}
 	} else {
-		c.JSON(401, gin.H{"status": "missing params"})
+		c.JSON(200, utils.JsonErrorMsg("缺少参数"))
 	}
+}
+
+//刷新token
+func RefreshAccessToken(c *gin.Context) {
+	refreshToken := c.PostForm("refreshToken")
+	if refreshToken == "" {
+		c.JSON(200, utils.JsonErrorMsg("refreshToken不能为空"))
+	}
+	userId, err := services.UserTokenService.GetRefreshTokenUserId(refreshToken)
+	if userId == 0 {
+		c.JSON(200, utils.JsonErrorMsg("refreshToken不合法"))
+		return
+	}
+	token, err := auth.GenerateToken(int(userId))
+	if err != nil {
+		c.JSON(200, utils.JsonError(err))
+		return
+	}
+	c.JSON(200, utils.JsonData(gin.H{
+		"token": token,
+	}))
+	return
 }
 
 func Upload(c *gin.Context) {
