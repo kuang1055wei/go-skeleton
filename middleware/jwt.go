@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	"gin-test/pkg/auth"
 	"gin-test/pkg/common"
 	"gin-test/utils"
-	"gin-test/utils/auth"
 	"net/http"
 	"strings"
 
