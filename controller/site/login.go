@@ -2,6 +2,7 @@ package site
 
 import (
 	"fmt"
+	"gin-test/pkg/common"
 	"gin-test/services"
 	"gin-test/utils"
 	"gin-test/utils/auth"
@@ -54,7 +55,7 @@ func RefreshAccessToken(c *gin.Context) {
 	}
 	userId, err := services.UserTokenService.GetUserIdByToken(refreshToken)
 	if userId == 0 {
-		c.JSON(200, utils.JsonErrorMsg("refreshToken不合法"))
+		c.JSON(200, utils.JsonCodeError(common.RefreshTokenError))
 		return
 	}
 	token, err := auth.GenerateToken(int(userId))
