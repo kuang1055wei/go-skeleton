@@ -32,7 +32,6 @@ func Login(c *gin.Context) {
 				c.JSON(200, utils.JsonError(err))
 				return
 			}
-
 			c.JSON(200, utils.JsonData(gin.H{
 				"refreshToken": refreshToken,
 				"token":        token,
