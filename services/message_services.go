@@ -2,7 +2,7 @@ package services
 
 import (
 	"gin-test/model"
-	"gin-test/pkg/db/date"
+	"gin-test/pkg/simpleDb/date"
 	"sync"
 
 	"go.uber.org/zap"
