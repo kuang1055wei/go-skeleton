@@ -46,7 +46,7 @@ func InitDb() error {
 			log.New(os.Stdout, "\r\n", log.LstdFlags),
 			logger.Config{
 				SlowThreshold: 200 * time.Millisecond,
-				LogLevel:      logger.Silent,
+				LogLevel:      logger.Silent, //log级别改此项即可
 				Colorful:      true,
 			},
 		)
