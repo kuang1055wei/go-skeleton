@@ -3,7 +3,7 @@ package simpleDb
 import (
 	"errors"
 	"fmt"
-	"gin-test/pkg/db/date"
+	"gin-test/pkg/simpleDb/date"
 	"strconv"
 	"strings"
 	"time"
