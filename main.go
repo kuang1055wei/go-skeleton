@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"gin-test/logger"
 	"gin-test/pkg/config"
-	"gin-test/pkg/db"
 	"gin-test/pkg/gredis"
+	"gin-test/pkg/simpleDb"
 	"gin-test/pkg/upload"
 	"gin-test/router"
 	"gin-test/utils"
@@ -46,7 +46,7 @@ func init() {
 	}
 
 	//数据库初始化
-	if err := db.InitDb(); err != nil {
+	if err := simpleDb.InitDb(); err != nil {
 		fmt.Printf("连接数据库失败，请检查参数:%v\n", err)
 		os.Exit(0)
 		return

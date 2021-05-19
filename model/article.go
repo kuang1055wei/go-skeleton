@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gin-test/pkg/db"
+	"gin-test/pkg/simpleDb"
 
 	"gorm.io/gorm"
 )
@@ -54,7 +54,7 @@ func (m *Article) TableName() string {
 func (obj *Article) GetArticleById(id int) (Article, error) {
 	var result Article
 	//First、Take、Last  没有找到记录时，它会返回 ErrRecordNotFound 错误
-	res := db.DB().Preload("Category").First(&result, id)
+	res := simpleDb.DB().Preload("Category").First(&result, id)
 
 	//res := db.Table(obj.TableName()).Preload("Category").Where("id = ?", id).Find(&result)
 	//res.RowsAffected //返回找到的记录数，相当于 `len(users)`
@@ -67,7 +67,7 @@ func (obj *Article) GetArticleById(id int) (Article, error) {
 //使用gorm.Expr使用表达式
 func IncrReadCount(id int) error {
 	var art Article
-	return db.DB().Model(&art).Where("id = ?", id).UpdateColumn("read_count", gorm.Expr("read_count + ?", 1)).Error
+	return simpleDb.DB().Model(&art).Where("id = ?", id).UpdateColumn("read_count", gorm.Expr("read_count + ?", 1)).Error
 }
 
 //获取文章列表
@@ -76,7 +76,7 @@ func GetArticleList(condition map[string]string, pageSize int, page int) ([]Arti
 	var total int64
 	column := "id,title,`cid`,`desc`,img,comment_count,read_count,created_at,updated_at"
 	//column := "id,title, img,  `desc`, comment_count, read_count"
-	tx := db.DB().Table("article").
+	tx := simpleDb.DB().Table("article").
 		Preload("Category").
 		Select(column).
 		Limit(pageSize).
@@ -100,7 +100,7 @@ func GetArticleList2(condition map[string]string, pageSize int, page int) ([]map
 	var total int64
 	column := "id,title,created_at"
 	//column := "id,title, img,  `desc`, comment_count, read_count"
-	tx := db.DB().Table("article").
+	tx := simpleDb.DB().Table("article").
 		Select(column).
 		Limit(pageSize).
 		Offset((page - 1) * pageSize).
@@ -122,7 +122,7 @@ func SearchArticle(title string, pageSize int, page int) ([]Article, int64) {
 	var articleList []Article
 	var total int64
 	column := "id,title,cid,`desc`,img,comment_count,read_count,created_at,updated_at"
-	err := db.DB().Table("article").
+	err := simpleDb.DB().Table("article").
 		Select(column).
 		Where("title Like ?", title+"%").
 		Limit(pageSize).
@@ -140,7 +140,7 @@ func SearchArticle2(title string, pageSize int, page int) ([]Article, int64, err
 	var articleList []Article
 	var total int64
 	column := "id,title,cid,`desc`,img,comment_count,read_count,created_at,updated_at"
-	result := db.DB().Table("article").
+	result := simpleDb.DB().Table("article").
 		Select(column).
 		Where("title Like ?", title+"%").
 		Limit(pageSize).
@@ -155,7 +155,7 @@ func SearchArticle2(title string, pageSize int, page int) ([]Article, int64, err
 }
 
 func createArticle(data *Article) (bool, error) {
-	err := db.DB().Create(&data).Error
+	err := simpleDb.DB().Create(&data).Error
 	if err != nil {
 		return false, err
 	}
@@ -170,7 +170,7 @@ func EditArticle(id int, data *Article) (bool, error) {
 	column["desc"] = data.Desc
 	column["content"] = data.Content
 	column["img"] = data.Img
-	result := db.DB().Debug().Model(&art).Where("id=?", id).Updates(column)
+	result := simpleDb.DB().Debug().Model(&art).Where("id=?", id).Updates(column)
 	if result.Error != nil {
 		return false, result.Error
 	}
@@ -183,7 +183,7 @@ func EditArticle(id int, data *Article) (bool, error) {
 // 删除文章
 func DeleteArt(id int) (bool, error) {
 	var art Article
-	err := db.DB().Where("id = ? ", id).Delete(&art).Error
+	err := simpleDb.DB().Where("id = ? ", id).Delete(&art).Error
 	if err != nil {
 		return false, err
 	}

@@ -1,4 +1,4 @@
-package db
+package simpleDb
 
 import (
 	"github.com/gin-gonic/gin"
