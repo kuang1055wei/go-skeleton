@@ -52,7 +52,7 @@ func RefreshAccessToken(c *gin.Context) {
 	if refreshToken == "" {
 		c.JSON(200, utils.JsonErrorMsg("refreshToken不能为空"))
 	}
-	userId, err := services.UserTokenService.GetRefreshTokenUserId(refreshToken)
+	userId, err := services.UserTokenService.GetUserIdByToken(refreshToken)
 	if userId == 0 {
 		c.JSON(200, utils.JsonErrorMsg("refreshToken不合法"))
 		return

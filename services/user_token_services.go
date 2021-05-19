@@ -15,6 +15,7 @@ func newUserTokenService() *userTokenService {
 	return &userTokenService{}
 }
 
+//用户的refresh token
 type userTokenService struct {
 }
 
@@ -29,13 +30,13 @@ func (s *userTokenService) GenerateRefreshToken(userId int64) (string, error) {
 		key := fmt.Sprintf("user:token2uid:%s", token)
 		_ = gredis.Client.Set(gredis.Ctx, key, userId, tokenExpireDays).Err()
 
-		_ = s.SetRefreshTokenByUserId(userId, token)
+		_ = s.SetUserIdToToken(userId, token)
 	}
 	return token, nil
 }
 
 //获取缓存中的token信息
-func (s *userTokenService) GetRefreshTokenUserId(token string) (userId int64, err error) {
+func (s *userTokenService) GetUserIdByToken(token string) (userId int64, err error) {
 	key := fmt.Sprintf("user:token2uid:%s", token)
 	userId, err = gredis.Client.Get(gredis.Ctx, key).Int64()
 	return
@@ -49,7 +50,7 @@ func (s *userTokenService) GetRefreshTokenByUserId(userId int64) string {
 }
 
 //保存用户ID->token关联
-func (s *userTokenService) SetRefreshTokenByUserId(userId int64, token string) error {
+func (s *userTokenService) SetUserIdToToken(userId int64, token string) error {
 	tokenExpireDays := time.Hour * 24 * 40
 	key := fmt.Sprintf("user:uid2token:%d", userId)
 	err := gredis.Client.Set(gredis.Ctx, key, token, tokenExpireDays).Err()
