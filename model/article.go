@@ -50,6 +50,7 @@ func (m *Article) TableName() string {
 	return "article"
 }
 
+//下面这些函数 都可以迁移到services中去
 // GetFromID 通过id获取内容 Primary key
 func (obj *Article) GetArticleById(id int) (Article, error) {
 	var result Article
