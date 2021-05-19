@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"gin-test/logger"
-	"gin-test/model"
 	"gin-test/pkg/config"
+	"gin-test/pkg/db"
 	"gin-test/pkg/gredis"
 	"gin-test/pkg/upload"
 	"gin-test/router"
@@ -39,14 +39,14 @@ func init() {
 	//log结束
 
 	//redis
-	if err := gredis.InitRedis();err!=nil{
+	if err := gredis.InitRedis(); err != nil {
 		fmt.Printf("init redis failed, err:%v\n", err)
 		os.Exit(0)
 		return
 	}
 
 	//数据库初始化
-	if err := model.InitDb();err!=nil{
+	if err := db.InitDb(); err != nil {
 		fmt.Printf("连接数据库失败，请检查参数:%v\n", err)
 		os.Exit(0)
 		return
@@ -109,7 +109,7 @@ func main() {
 	zap.L().Info(fmt.Sprintf("Listening and serving HTTP on %s\n", address))
 
 	go func() {
-		if err := server.ListenAndServe();err!=nil  {
+		if err := server.ListenAndServe(); err != nil {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
@@ -120,8 +120,8 @@ func main() {
 	// kill -2 发送 syscall.SIGINT 信号，我们常用的Ctrl+C就是触发系统SIGINT信号
 	// kill -9 发送 syscall.SIGKILL 信号，但是不能被捕获，所以不需要添加它
 	// signal.Notify把收到的 syscall.SIGINT或syscall.SIGTERM 信号转发给quit
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)  // 此处不会阻塞
-	<-quit  // 阻塞在此，当接收到上述两种信号时才会往下执行
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM) // 此处不会阻塞
+	<-quit                                               // 阻塞在此，当接收到上述两种信号时才会往下执行
 	log.Println("Shutdown Server ...")
 	// 创建一个5秒超时的context
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -131,7 +131,6 @@ func main() {
 		log.Fatal("Server Shutdown: ", err)
 	}
 	log.Println("Server exiting")
-
 
 	// 默认endless服务器会监听下列信号：
 	//	"github.com/fvbock/endless"

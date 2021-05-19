@@ -1,9 +1,10 @@
-package model
+package db
 
 import (
-	"github.com/sirupsen/logrus"
 	"strings"
 	"unicode"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/PuerkitoBio/goquery"
 	uuid "github.com/iris-contrib/go.uuid"

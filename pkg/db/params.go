@@ -1,13 +1,14 @@
-package model
+package db
 
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
+	"gin-test/pkg/db/date"
 	"strconv"
 	"strings"
 	"time"
-	"gin-test/model/date"
+
+	"github.com/gin-gonic/gin"
 )
 
 //var (

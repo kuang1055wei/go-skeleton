@@ -2,9 +2,10 @@ package services
 
 import (
 	"gin-test/model"
-	"gin-test/model/date"
-	"go.uber.org/zap"
+	"gin-test/pkg/db/date"
 	"sync"
+
+	"go.uber.org/zap"
 )
 
 var MessageService = newMessageService()

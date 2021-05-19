@@ -1,6 +1,7 @@
-package model
+package db
 
 import (
+	"database/sql"
 	"fmt"
 	"gin-test/pkg/config"
 	"log"
@@ -16,7 +17,11 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var (
+	db    *gorm.DB
+	sqlDB *sql.DB
+)
+
 var err error
 
 func InitDb() error {
@@ -89,4 +94,19 @@ func InitDb() error {
 	//sqlDB.SetConnMaxLifetime(10 * time.Second)
 
 	return nil
+}
+
+// 获取数据库链接
+func DB() *gorm.DB {
+	return db
+}
+
+// 关闭连接
+func CloseDB() {
+	if sqlDB == nil {
+		return
+	}
+	if err := sqlDB.Close(); nil != err {
+		log.Printf("Disconnect from database failed: %s", err.Error())
+	}
 }
