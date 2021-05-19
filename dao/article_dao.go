@@ -2,6 +2,8 @@ package dao
 
 import (
 	"gin-test/model"
+	"gin-test/pkg/simpleDb"
+
 	"gorm.io/gorm"
 )
 
@@ -15,7 +17,7 @@ type articleDao struct {
 }
 
 //查询兑换码
-func (c *articleDao) Get(db *gorm.DB, id int) *model.Article {
+func (c *articleDao) Get(db *gorm.DB, id int64) *model.Article {
 	code := &model.Article{}
 	res := db.First(code, id)
 	if res.Error != nil {
@@ -27,6 +29,19 @@ func (c *articleDao) Get(db *gorm.DB, id int) *model.Article {
 func (c *articleDao) Take(db *gorm.DB, where ...interface{}) *model.Article {
 	ret := &model.Article{}
 	if err := db.Take(ret, where...).Error; err != nil {
+		return nil
+	}
+	return ret
+}
+
+func (r *articleDao) Find(db *gorm.DB, cnd *simpleDb.SqlCnd) (list []model.Article) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (r *articleDao) FindOne(db *gorm.DB, cnd *simpleDb.SqlCnd) *model.Article {
+	ret := &model.Article{}
+	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
 	}
 	return ret
@@ -79,24 +94,15 @@ func (c *articleDao) Delete(db *gorm.DB, id int64) {
 //	return db.Exec(buffer.String()).Error
 //}
 
-//获取商品的解锁码数量
-func (c *articleDao) GetGoodsCodeNum(db *gorm.DB, id int) int64 {
-	var total int64
-	if err := db.Model(&model.Article{}).Where("goods_id = ?", id).Count(&total); err != nil {
-		return 0
-	}
-	return total
-}
-
-func (c *articleDao) FindPageByParams(db *gorm.DB, params *model.QueryParams) (list []model.Article, paging *model.Paging) {
+func (c *articleDao) FindPageByParams(db *gorm.DB, params *simpleDb.QueryParams) (list []model.Article, paging *simpleDb.Paging) {
 	return c.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (c *articleDao) FindPageByCnd(db *gorm.DB, cnd *model.SqlCnd) (list []model.Article, paging *model.Paging) {
+func (c *articleDao) FindPageByCnd(db *gorm.DB, cnd *simpleDb.SqlCnd) (list []model.Article, paging *simpleDb.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.Article{})
 
-	paging = &model.Paging{
+	paging = &simpleDb.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
 		Total: count,
