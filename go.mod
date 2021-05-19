@@ -17,6 +17,7 @@ require (
 	github.com/juju/ratelimit v1.0.1
 	github.com/panjf2000/ants/v2 v2.4.4
 	github.com/pkg/errors v0.8.1
+	github.com/robfig/cron v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.16.0
