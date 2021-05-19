@@ -6,15 +6,18 @@ import (
 	"gin-test/model"
 	"gin-test/pkg/config"
 	"gin-test/pkg/gredis"
+	"gin-test/pkg/simpleDb"
 	"gin-test/pkg/upload"
+	"gin-test/services"
 	"gin-test/utils"
-	"github.com/panjf2000/ants/v2"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/panjf2000/ants/v2"
+	"github.com/spf13/viper"
 
 	"github.com/go-playground/validator/v10"
 
@@ -76,20 +79,27 @@ func GetArticleList(c *gin.Context) {
 	//params := model.NewQueryParams(c)
 	//params.LikeByReq("title").PageByReq().Desc("id")
 
-	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	title := c.Query("title")
-	var condition = make(map[string]string)
-	if title != "" {
-		condition["title"] = title
-	}
-	list1, total1 := model.GetArticleList(condition, pageSize, page)
-	list, total := model.GetArticleList2(condition, pageSize, page)
+	params := simpleDb.NewQueryParams(c)
+	params.LikeByReq("title").PageByReq().Desc("id")
+	articleList3, paging := services.ArticleService.FindPageByParams(params)
+
+	//pageSize, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	//page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	//title := c.Query("title")
+	//var condition = make(map[string]string)
+	//if title != "" {
+	//	condition["title"] = title
+	//}
+	//list1, total1 := model.GetArticleList(condition, pageSize, page)
+	//list, total := model.GetArticleList2(condition, pageSize, page)
 	c.JSON(http.StatusOK, gin.H{
-		"list1":  list1,
-		"total1": total1,
-		"list":   list,
-		"total":  total,
+		"articleList3": articleList3,
+		"paging":       paging,
+
+		//"list1":  list1,
+		//"total1": total1,
+		//"list":   list,
+		//"total":  total,
 	})
 }
 
