@@ -34,7 +34,6 @@ func JwtToken() gin.HandlerFunc {
 
 		key, err := auth.CheckToken(checkToken[1])
 		if err != nil {
-			utils.JsonError(err)
 			c.JSON(http.StatusOK, utils.JsonCodeError(err))
 			c.Abort()
 			return
