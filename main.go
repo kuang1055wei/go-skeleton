@@ -54,6 +54,13 @@ func init() {
 
 	//翻译
 	_ = utils.InitTrans("zh")
+
+	//队列任务初始化
+	//if err := queue.InitQueue(); err != nil {
+	//	fmt.Printf("队列初始化失败:%v\n", err)
+	//	os.Exit(0)
+	//	return
+	//}
 }
 
 func initGin() *gin.Engine {

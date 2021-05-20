@@ -48,6 +48,7 @@ func LoadDefault(e *gin.Engine) {
 	e.GET("/article/viperTest", article.ViperTest)
 
 	e.GET("/article/myChan2", article.MyChan2)
+	e.GET("/article/queue", article.TestQueue)
 	//路由组
 	v1 := e.Group("v1").Use(middleware.JwtToken())
 	{

@@ -1,11 +1,13 @@
 package article
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"gin-test/model"
 	"gin-test/pkg/config"
 	"gin-test/pkg/gredis"
+	"gin-test/pkg/queue"
 	"gin-test/pkg/simpleDb"
 	"gin-test/pkg/upload"
 	"gin-test/services"
@@ -15,6 +17,10 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/opentracing/opentracing-go"
+
+	"github.com/RichardKnop/machinery/v1/tasks"
 
 	"github.com/panjf2000/ants/v2"
 	"github.com/spf13/viper"
@@ -339,4 +345,64 @@ func ViperTest(c *gin.Context) {
 		"redis":     string(optStr),
 		"config":    config.Conf,
 	})
+}
+
+//测试发送队列
+func TestQueue(c *gin.Context) {
+
+	span, ctx := opentracing.StartSpanFromContext(context.Background(), "send")
+	defer span.Finish()
+	//server, _ := queue.StartServer()
+	server := queue.GetServer()
+
+	//asyncResult, err := server.SendTask(&tasks.Signature{
+	//	Name:       "error",
+	//	RetryCount: 10,
+	//})
+
+	//asyncResult, err = server.SendTask(&tasks.Signature{
+	//	Name: "panic",
+	//})
+
+	//asyncResult, err = server.SendTask(&tasks.Signature{
+	//	Name: "nofunctiontest",
+	//	Args: []tasks.Arg{
+	//		{
+	//			Type:  "int64",
+	//			Value: 1,
+	//		},
+	//	},
+	//	RetryCount:   3,
+	//	RetryTimeout: 60,
+	//})
+
+	//这是同步获取任务结果
+	asyncResult, err := server.SendTaskWithContext(ctx, &tasks.Signature{
+		Name: "add",
+		Args: []tasks.Arg{
+			{
+				Type:  "int64",
+				Value: 1,
+			},
+			{
+				Type:  "int64",
+				Value: 1,
+			},
+		},
+		RetryCount: 3,
+	})
+	if err != nil {
+		c.JSON(http.StatusOK, utils.JsonError(err))
+		return
+	}
+	//results, err := asyncResult.Get(time.Millisecond * 5)
+	//c.JSON(http.StatusOK, utils.JsonData(gin.H{
+	//	"result1": results,
+	//	"result":  tasks.HumanReadableResults(results),
+	//}))
+
+	c.JSON(http.StatusOK, utils.JsonData(gin.H{
+		"result": asyncResult,
+	}))
+	return
 }
