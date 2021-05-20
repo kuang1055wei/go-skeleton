@@ -7,7 +7,8 @@ gin框架脚手架案例 日志zap
 redis:[goredis](https://github.com/go-redis/redis)  
 优雅关机:[参考](https://www.liwenzhou.com/posts/Go/graceful_shutdown/)  
 jwt:[jwt-go](github.com/dgrijalva/jwt-go)  
-ants:[ants](https://github.com/panjf2000/ants)
+协程池:[ants](https://github.com/panjf2000/ants)  
+分布式队列：[machinery](https://github.com/RichardKnop/machinery#retry-tasks)
 
 ## 常用方法
 **中间件**:middleware  
