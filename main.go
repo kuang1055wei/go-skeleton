@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"gin-test/logger"
+	"gin-test/middleware"
 	"gin-test/pkg/config"
 	"gin-test/pkg/gredis"
 	"gin-test/pkg/simpleDb"
@@ -83,6 +84,7 @@ func initGin() *gin.Engine {
 	//r.LoadHTMLGlob("view/**/*")
 
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
+	r.Use(middleware.Cors())
 
 	//加载路由
 	router.LoadDefault(r)
