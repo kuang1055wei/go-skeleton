@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"gorm.io/plugin/dbresolver"
+	"go.uber.org/zap"
 
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -71,27 +71,31 @@ func InitDb() error {
 	if err != nil {
 		return err
 	}
-
-	db.Use(
-		dbresolver.Register(dbresolver.Config{}).
-			SetConnMaxIdleTime(time.Hour).
-			SetConnMaxLifetime(24 * time.Hour).
-			SetMaxIdleConns(100).
-			SetMaxOpenConns(200),
-	)
-
 	// 迁移数据表，在没有数据表结构变更时候，建议注释不执行
 	//_ = db.AutoMigrate(&User{}, &Article{}, &Category{}, Profile{}, Comment{})
 
-	//sqlDB, _ := db.DB()
-	//// SetMaxIdleCons 设置连接池中的最大闲置连接数。
-	//sqlDB.SetMaxIdleConns(10)
-	//
-	//// SetMaxOpenCons 设置数据库的最大连接数量。
-	//sqlDB.SetMaxOpenConns(100)
-	//
-	//// SetConnMaxLifetiment 设置连接的最大可复用时间。
-	//sqlDB.SetConnMaxLifetime(10 * time.Second)
+	//下面两种设置连接池的方法效果一样
+	if sqlDB, err = db.DB(); err == nil {
+		// SetMaxIdleCons 设置连接池中的最大闲置连接数。
+		sqlDB.SetMaxIdleConns(10)
+
+		// SetMaxOpenCons 设置数据库的最大连接数量。
+		sqlDB.SetMaxOpenConns(100)
+
+		// SetConnMaxLifetiment 设置连接的最大可复用时间。
+		sqlDB.SetConnMaxLifetime(24 * time.Hour)
+	} else {
+		zap.L().Warn("mysql conns error:", zap.String("error", err.Error()))
+	}
+
+	//这里是多数据源的连接池
+	//db.Use(
+	//	dbresolver.Register(dbresolver.Config{}).
+	//		SetConnMaxIdleTime(time.Hour).
+	//		SetConnMaxLifetime(24 * time.Hour).
+	//		SetMaxIdleConns(10).
+	//		SetMaxOpenConns(105),
+	//)
 
 	return nil
 }
