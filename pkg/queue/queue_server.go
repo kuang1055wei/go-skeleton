@@ -53,6 +53,10 @@ func InitQueue() error {
 		return err
 	}
 	//注册task
+	//server.RegisterTasks(map[string]interface{}{
+	//	"add":      Add,
+	//	"multiply": Multiply,
+	//})
 	_ = server.RegisterTask("add", task.Add)
 	_ = server.RegisterTask("panic", task.PanicTask)
 	_ = server.RegisterTask("error", task.ErrorTask)

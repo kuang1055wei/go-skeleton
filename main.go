@@ -55,7 +55,7 @@ func init() {
 	//翻译
 	_ = utils.InitTrans("zh")
 
-	//队列任务初始化
+	//队列任务初始化，如果要使用队列打开注释即可，task目录为处理方法，在InitQueue中注册即可
 	//if err := queue.InitQueue(); err != nil {
 	//	fmt.Printf("队列初始化失败:%v\n", err)
 	//	os.Exit(0)
