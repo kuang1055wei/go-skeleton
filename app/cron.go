@@ -5,8 +5,19 @@ import (
 	"go.uber.org/zap"
 )
 
+type Logger struct {
+}
+
 func startSchedule() {
-	c := cron.New(cron.WithSeconds())
+	//SkipIfStillRunning为前面任务没执行完，则跳过当前任务
+	c := cron.New(
+		cron.WithSeconds(),
+		cron.WithChain(cron.SkipIfStillRunning(cron.DefaultLogger)))
+
+	//c.AddFunc("1/2 * * * * ?", func() {
+	//	fmt.Println("2s一次:", carbon.Now().ToDateTimeString())
+	//	time.Sleep(time.Second * 10)
+	//})
 
 	//加锁保证多机器只执行一次
 	//addCronFunc(c, "1/5 * * * * ?", func() {
