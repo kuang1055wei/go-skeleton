@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/robfig/cron"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 func startSchedule() {
@@ -26,6 +26,6 @@ func startSchedule() {
 func addCronFunc(c *cron.Cron, sepc string, cmd func()) {
 	err := c.AddFunc(sepc, cmd)
 	if err != nil {
-		logrus.Error(err)
+		zap.L().Error("添加计划任务失败", zap.NamedError("error:", err))
 	}
 }
