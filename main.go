@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"gin-test/app"
 	"gin-test/logger"
 	"gin-test/middleware"
 	"gin-test/pkg/config"
@@ -99,11 +100,8 @@ func initGin() *gin.Engine {
 //}
 
 func main() {
-	defer func() {
-		if p := recover(); p != nil {
-			fmt.Println(p)
-		}
-	}()
+	app.StartOn()
+
 	handler := initGin()
 	address := fmt.Sprintf(":%s", config.Conf.ServerConfig.HttpPort)
 	readTimeout := config.Conf.ServerConfig.ReadTimeout * time.Second

@@ -22,11 +22,11 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/panjf2000/ants/v2 v2.4.4
 	github.com/pkg/errors v0.9.1
-	github.com/robfig/cron v1.2.0
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.16.0
-	gopkg.in/ini.v1 v1.62.0
+	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.0.5
 	gorm.io/gorm v1.21.7
