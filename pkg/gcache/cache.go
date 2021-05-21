@@ -1,9 +1,12 @@
 package gcache
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"gin-test/pkg/gredis"
 	"sync"
+	"time"
 
 	"github.com/go-redis/cache/v8"
 
@@ -41,30 +44,32 @@ func GetCache() *cache.Cache {
 	return instance
 }
 
-//func Demo() {
-//	//直接设置缓存
-//	_ = GetCache().Set(&cache.Item{
-//		Key:   "myKey2",
-//		Value: 1,
-//		TTL:   time.Minute * 5,
-//	})
-//
-//	//只会加载一次，如果不存在，则调用do方法加载
-//	_ = GetCache().Once(&cache.Item{
-//		Key:   "myKey",
-//		Value: nil,
-//		TTL:   time.Minute * 10,
-//		Do: func(item *cache.Item) (interface{}, error) {
-//			res := map[string]string{
-//				"a": "aaaa",
-//				"b": "bbbb",
-//			}
-//			return res, nil
-//		},
-//	})
-//
-//	//获取
-//	var val interface{}
-//	GetCache().Get(context.TODO(), "myKey", &val)
-//	fmt.Printf("%+v\n", val)
-//}
+func Demo() {
+	//只会加载一次，如果不存在，则调用do方法加载,如果Value绑定了参数，那么会用do方法的结果赋值
+	var res map[string]string
+	_ = GetCache().Once(&cache.Item{
+		Key:   "myKey",
+		Value: &res,
+		TTL:   time.Minute * 10,
+		Do: func(item *cache.Item) (interface{}, error) {
+			fmt.Println("缓存不存在，我只会执行一次的")
+			return map[string]string{
+				"a": "aaaa",
+				"b": "bbbb",
+			}, nil
+		},
+	})
+	fmt.Printf("%+v\n", res)
+
+	//直接设置缓存
+	_ = GetCache().Set(&cache.Item{
+		Key:   "myKey2",
+		Value: 1,
+		TTL:   time.Minute * 5,
+	})
+
+	//获取
+	var val interface{}
+	GetCache().Get(context.TODO(), "myKey2", &val)
+	fmt.Printf("%+v\n", val)
+}
