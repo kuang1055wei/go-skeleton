@@ -1,5 +1,7 @@
 package utils
 
+import "gin-test/pkg/common"
+
 type JsonResult struct {
 	ErrorCode int         `json:"errorCode"`
 	Message   string      `json:"message"`
@@ -46,7 +48,7 @@ func JsonSuccess() *JsonResult {
 	}
 }
 
-func JsonCodeError(err *CodeError) *JsonResult {
+func JsonCodeError(err *common.CodeError) *JsonResult {
 	return &JsonResult{
 		ErrorCode: err.Code,
 		Message:   err.Message,
@@ -83,5 +85,5 @@ func JsonErrorData(code int, message string, data interface{}) *JsonResult {
 }
 
 func JsonError(err error) *JsonResult {
-	return JsonCodeError(FromError(err))
+	return JsonCodeError(common.FromError(err))
 }

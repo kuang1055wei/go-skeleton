@@ -3,7 +3,6 @@ package auth
 import (
 	"gin-test/pkg/common"
 	"gin-test/pkg/config"
-	"gin-test/utils"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/golang-module/carbon"
@@ -36,7 +35,7 @@ func GenerateToken(id int) (string, error) {
 }
 
 // 验证token
-func CheckToken(token string) (*MyClaims, *utils.CodeError) {
+func CheckToken(token string) (*MyClaims, *common.CodeError) {
 	var claims MyClaims
 
 	claimsToken, err := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
