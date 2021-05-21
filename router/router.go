@@ -1,11 +1,8 @@
 package router
 
 import (
-	"gin-test/controller/article"
 	"gin-test/controller/site"
 	"gin-test/controller/test"
-	"gin-test/middleware"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,21 +35,21 @@ func LoadDefault(e *gin.Engine) {
 	e.POST("/site/login", site.Login)
 	e.POST("/site/refreshToken", site.RefreshAccessToken)
 
-	e.Use(middleware.RateLimitMiddleware(time.Second, 100)).GET("/article/info", article.GetArticle)
-	e.GET("/article/list", article.GetArticleList)
-	e.GET("/article/myHttp", article.MyHttp)
-	e.GET("/article/myChan", article.MyChan)
-	e.POST("/article/edit", article.EditArticle)
-	e.GET("/article/search", article.SearchArticle)
-	e.POST("/article/uploadImg", article.UploadImg)
-	e.GET("/article/viperTest", article.ViperTest)
-
-	e.GET("/article/myChan2", article.MyChan2)
-	e.GET("/article/queue", article.TestQueue)
-	//路由组
-	v1 := e.Group("v1").Use(middleware.JwtToken())
-	{
-		v1.GET("/article/info", article.GetArticle)
-		v1.GET("/article/list", article.GetArticleList)
-	}
+	//e.Use(middleware.RateLimitMiddleware(time.Second, 100)).GET("/article/info", article.GetArticle)
+	//e.GET("/article/list", article.GetArticleList)
+	//e.GET("/article/myHttp", article.MyHttp)
+	//e.GET("/article/myChan", article.MyChan)
+	//e.POST("/article/edit", article.EditArticle)
+	//e.GET("/article/search", article.SearchArticle)
+	//e.POST("/article/uploadImg", article.UploadImg)
+	//e.GET("/article/viperTest", article.ViperTest)
+	//
+	//e.GET("/article/myChan2", article.MyChan2)
+	//e.GET("/article/queue", article.TestQueue)
+	////路由组
+	//v1 := e.Group("v1").Use(middleware.JwtToken())
+	//{
+	//	v1.GET("/article/info", article.GetArticle)
+	//	v1.GET("/article/list", article.GetArticleList)
+	//}
 }

@@ -1,4 +1,4 @@
-package article
+package api
 
 import (
 	"context"
@@ -18,19 +18,19 @@ import (
 	"sync"
 	"time"
 
-	"github.com/opentracing/opentracing-go"
+	"github.com/go-playground/validator/v10"
+	"github.com/panjf2000/ants/v2"
 
 	"github.com/RichardKnop/machinery/v1/tasks"
-
-	"github.com/panjf2000/ants/v2"
-	"github.com/spf13/viper"
-
-	"github.com/go-playground/validator/v10"
-
 	"github.com/gin-gonic/gin"
+	"github.com/opentracing/opentracing-go"
+	"github.com/spf13/viper"
 )
 
-func GetArticle(c *gin.Context) {
+type ArticleController struct {
+}
+
+func (a *ArticleController) GetArticle(c *gin.Context) {
 	var articleInfo model.Article
 	articleMap := make(map[string]interface{})
 	id, _ := strconv.Atoi(c.Query("id"))
@@ -81,7 +81,7 @@ func GetArticle(c *gin.Context) {
 	})
 }
 
-func GetArticleList(c *gin.Context) {
+func (a *ArticleController) GetArticleList(c *gin.Context) {
 	//params := model.NewQueryParams(c)
 	//params.LikeByReq("title").PageByReq().Desc("id")
 
@@ -109,7 +109,7 @@ func GetArticleList(c *gin.Context) {
 	})
 }
 
-func SearchArticle(c *gin.Context) {
+func (a *ArticleController) SearchArticle(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	title := c.Query("title")
@@ -143,7 +143,7 @@ type ArticleForm struct {
 	//ReadCount    int64  `json:"read_count" form:"read_count" binding:"required"`
 }
 
-func EditArticle(c *gin.Context) {
+func (a *ArticleController) EditArticle(c *gin.Context) {
 	var artForm ArticleForm
 
 	if err := c.ShouldBind(&artForm); err != nil {
@@ -175,7 +175,7 @@ func EditArticle(c *gin.Context) {
 	})
 }
 
-func MyHttp(c *gin.Context) {
+func (a *ArticleController) MyHttp(c *gin.Context) {
 	//自定义头什么的
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", "http://www.leiphone.com", nil)
@@ -204,12 +204,12 @@ func MyHttp(c *gin.Context) {
 }
 
 //测试协程拉取
-func MyChan(c *gin.Context) {
+func (a *ArticleController) MyChan(c *gin.Context) {
 
 	id1, _ := strconv.Atoi(c.DefaultQuery("id1", "3"))
 	id2, _ := strconv.Atoi(c.DefaultQuery("id2", "4"))
-	art1Chan := getArt(id1)
-	art2Chan := getArt(id2)
+	art1Chan := a.getArt(id1)
+	art2Chan := a.getArt(id2)
 
 	art1 := <-art1Chan
 	art2 := <-art2Chan
@@ -226,7 +226,7 @@ func MyChan(c *gin.Context) {
 	//context.WithValue(ctx, "anc", "aaaa")
 }
 
-func getArt(id int) <-chan model.Article {
+func (a *ArticleController) getArt(id int) <-chan model.Article {
 	artChan := make(chan model.Article)
 	go func(id int) {
 
@@ -244,7 +244,7 @@ func demoFunc(i int) {
 
 //使用ants
 //https://github.com/panjf2000/ants/blob/master/README_ZH.md
-func MyChan2(c *gin.Context) {
+func (a *ArticleController) MyChan2(c *gin.Context) {
 	defer ants.Release()
 	var wg sync.WaitGroup
 	//syncCalculateSum := func() {
@@ -284,7 +284,7 @@ func MyChan2(c *gin.Context) {
 //	c.String(http.StatusOK, file.Filename)
 //}
 
-func UploadImg(c *gin.Context) {
+func (a *ArticleController) UploadImg(c *gin.Context) {
 	file, fileHeader, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -333,7 +333,7 @@ func UploadImg(c *gin.Context) {
 
 }
 
-func ViperTest(c *gin.Context) {
+func (a *ArticleController) ViperTest(c *gin.Context) {
 	opt := gredis.Client.Options()
 	optStr, _ := json.Marshal(opt)
 	fmt.Printf("%+v", opt)
@@ -348,7 +348,7 @@ func ViperTest(c *gin.Context) {
 }
 
 //测试发送队列
-func TestQueue(c *gin.Context) {
+func (a *ArticleController) TestQueue(c *gin.Context) {
 
 	span, ctx := opentracing.StartSpanFromContext(context.Background(), "send")
 	defer span.Finish()

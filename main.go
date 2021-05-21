@@ -88,6 +88,8 @@ func initGin() *gin.Engine {
 
 	//加载路由
 	router.LoadDefault(r)
+	router.LoadAdminRouter(r)
+	router.LoadApiRouter(r)
 	return r
 }
 
