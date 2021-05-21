@@ -24,5 +24,6 @@ func LoadApiRouter(e *gin.Engine) {
 		apiRouter.GET("/article/viperTest", art.ViperTest)
 		apiRouter.GET("/article/myChan2", art.MyChan2)
 		apiRouter.GET("/article/queue", art.TestQueue)
+		apiRouter.GET("/article/testPanic", art.TestPanic)
 	}
 }

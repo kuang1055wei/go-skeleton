@@ -35,13 +35,13 @@ func (a *ArticleController) GetArticle(c *gin.Context) {
 	articleMap := make(map[string]interface{})
 	id, _ := strconv.Atoi(c.Query("id"))
 	key := "article:" + strconv.Itoa(id)
-	data, err := gredis.Client.Get(gredis.Ctx, key).Result()
+	data, err := gredis.GetRedis().Get(context.TODO(), key).Result()
 	if data == "" || err != nil {
 		art := model.Article{}
 		articleInfo, err = art.GetArticleById(id)
 		if articleInfo != (model.Article{}) {
 			cacheValue, _ := json.Marshal(articleInfo)
-			_ = gredis.Client.Set(gredis.Ctx, key, cacheValue, 60*60*time.Second).Err()
+			_ = gredis.GetRedis().Set(context.TODO(), key, cacheValue, 60*60*time.Second).Err()
 			_ = json.Unmarshal(cacheValue, &articleMap)
 		}
 	} else {
@@ -62,15 +62,15 @@ func (a *ArticleController) GetArticle(c *gin.Context) {
 	//}
 	//wg.Wait()
 	//测试连接池end
-	res, _ := gredis.Client.SetNX(gredis.Ctx, "test", "test value", time.Second*60).Result()
-	res1, _ := gredis.Client.Set(gredis.Ctx, "test2", "test value2", time.Second*55).Result()
-	res2, _ := gredis.Client.Get(gredis.Ctx, "test2").Result()
+	res, _ := gredis.GetRedis().SetNX(context.TODO(), "test", "test value", time.Second*60).Result()
+	res1, _ := gredis.GetRedis().Set(context.TODO(), "test2", "test value2", time.Second*55).Result()
+	res2, _ := gredis.GetRedis().Get(context.TODO(), "test2").Result()
 	redisMap := make(map[string]interface{})
 	redisMap["res"] = res
 	redisMap["res1"] = res1
 	redisMap["res2"] = res2
 	redisMap["articleCache"] = data
-	redisMap["poolStatus"] = gredis.Client.PoolStats()
+	redisMap["poolStatus"] = gredis.GetRedis().PoolStats()
 
 	c.JSON(http.StatusOK, gin.H{
 		"uid":         c.GetInt("uid"),
@@ -334,7 +334,7 @@ func (a *ArticleController) UploadImg(c *gin.Context) {
 }
 
 func (a *ArticleController) ViperTest(c *gin.Context) {
-	opt := gredis.Client.Options()
+	opt := gredis.GetRedis().Options()
 	optStr, _ := json.Marshal(opt)
 	fmt.Printf("%+v", opt)
 	c.JSON(200, gin.H{

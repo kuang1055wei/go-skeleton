@@ -9,15 +9,15 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-//context
-var Ctx = context.Background()
-
 //redisclient
-var Client *redis.Client
+var client *redis.Client
+
+func GetRedis() *redis.Client {
+	return client
+}
 
 func InitRedis() error {
-
-	Client = redis.NewClient(&redis.Options{
+	client = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s", config.Conf.RedisConfig.Host),
 		Password: config.Conf.RedisConfig.Password, // no password set
 		DB:       0,                                // use default DB
@@ -26,7 +26,7 @@ func InitRedis() error {
 		MinIdleConns: 10,
 		IdleTimeout:  config.Conf.RedisConfig.IdleTimeout, //关闭空闲连接时间
 	})
-	if err := Client.Ping(Ctx).Err(); err != nil {
+	if err := client.Ping(context.TODO()).Err(); err != nil {
 		return err
 	}
 	return nil

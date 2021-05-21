@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"fmt"
 	"gin-test/pkg/gredis"
 	"strings"
@@ -28,7 +29,7 @@ func (s *userTokenService) GenerateRefreshToken(userId int64) (string, error) {
 		//30天过期时间
 		tokenExpireDays := time.Hour * 24 * 40
 		key := fmt.Sprintf("user:token2uid:%s", token)
-		_ = gredis.Client.Set(gredis.Ctx, key, userId, tokenExpireDays).Err()
+		_ = gredis.GetRedis().Set(context.TODO(), key, userId, tokenExpireDays).Err()
 
 		_ = s.SetUserIdToToken(userId, token)
 	}
@@ -38,14 +39,14 @@ func (s *userTokenService) GenerateRefreshToken(userId int64) (string, error) {
 //获取缓存中的token信息
 func (s *userTokenService) GetUserIdByToken(token string) (userId int64, err error) {
 	key := fmt.Sprintf("user:token2uid:%s", token)
-	userId, err = gredis.Client.Get(gredis.Ctx, key).Int64()
+	userId, err = gredis.GetRedis().Get(context.TODO(), key).Int64()
 	return
 }
 
 //根据用户ID获取token
 func (s *userTokenService) GetRefreshTokenByUserId(userId int64) string {
 	key := fmt.Sprintf("user:uid2token:%d", userId)
-	token := gredis.Client.Get(gredis.Ctx, key).Val()
+	token := gredis.GetRedis().Get(context.TODO(), key).Val()
 	return token
 }
 
@@ -53,6 +54,6 @@ func (s *userTokenService) GetRefreshTokenByUserId(userId int64) string {
 func (s *userTokenService) SetUserIdToToken(userId int64, token string) error {
 	tokenExpireDays := time.Hour * 24 * 40
 	key := fmt.Sprintf("user:uid2token:%d", userId)
-	err := gredis.Client.Set(gredis.Ctx, key, token, tokenExpireDays).Err()
+	err := gredis.GetRedis().Set(context.TODO(), key, token, tokenExpireDays).Err()
 	return err
 }

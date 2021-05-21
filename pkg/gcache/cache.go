@@ -21,7 +21,7 @@ func GetCache() *cache.Cache {
 			},
 			NewClient: func(name string, opt *redis.Options) *redis.Client {
 				//直接使用gredis的客户端，上面的Addrs不能省略，
-				return gredis.Client
+				return gredis.GetRedis()
 			},
 		})
 		instance = cache.New(&cache.Options{

@@ -47,7 +47,7 @@ func getLogFilePath() string {
 
 // getLogFileName get the save name of the log file
 func getLogFileName() string {
-	logSrc := strings.Split(config.Conf.LogConfig.Filename , ".")
+	logSrc := strings.Split(config.Conf.LogConfig.Filename, ".")
 	return fmt.Sprintf("%s%s.%s",
 		logSrc[0],
 		time.Now().Format(config.Conf.LogConfig.TimeFormat),
@@ -65,10 +65,9 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewJSONEncoder(encoderConfig)
 }
 
-
 func getLogWriter(filename string, maxSize, maxBackup, maxAge int) zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   getLogFilePath()+"/"+getLogFileName(),
+		Filename:   getLogFilePath() + "/" + getLogFileName(),
 		MaxSize:    maxSize,
 		MaxBackups: maxBackup,
 		MaxAge:     maxAge,
