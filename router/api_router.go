@@ -14,6 +14,9 @@ func LoadApiRouter(e *gin.Engine) {
 	//apiRouter := e.Group("api").Use(middleware.RateLimitMiddleware(time.Second, 100)).Use(middleware.JwtToken())
 	apiRouter := e.Group("api").Use(middleware.RateLimitMiddleware(time.Second, 100))
 	{
+		apiRouter.GET("/article/getArticleById", art.GetArticleById)
+		apiRouter.GET("/article/getArticleByCache", art.GetArticleByCache)
+		apiRouter.GET("/article/create", art.Create)
 		apiRouter.GET("/article/info", art.GetArticle)
 		apiRouter.GET("/article/list", art.GetArticleList)
 		apiRouter.GET("/article/myHttp", art.MyHttp)

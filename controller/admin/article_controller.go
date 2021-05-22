@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gin-test/model"
 	"gin-test/pkg/config"
+	"gin-test/pkg/gcache"
 	"gin-test/pkg/gredis"
 	"gin-test/pkg/queue"
 	"gin-test/pkg/simpleDb"
@@ -17,6 +18,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/go-redis/cache/v8"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/panjf2000/ants/v2"
@@ -35,6 +38,23 @@ func (a *ArticleController) GetArticle(c *gin.Context) {
 	articleMap := make(map[string]interface{})
 	id, _ := strconv.Atoi(c.Query("id"))
 	key := "article:" + strconv.Itoa(id)
+	var article model.Article
+	err := gcache.GetCache().Get(context.TODO(), key, &article)
+	if err != nil || article == (model.Article{}) {
+		_ = gcache.GetCache().Once(&cache.Item{
+			Ctx:   context.TODO(),
+			Key:   key,
+			Value: &article,
+			TTL:   60,
+			Do: func(item *cache.Item) (interface{}, error) {
+				serv := services.ArticleService
+				articleInfo, err = serv.GetArticleById(id)
+				return articleInfo, nil
+			},
+		})
+		fmt.Printf("%v", article)
+	}
+
 	data, err := gredis.GetRedis().Get(context.TODO(), key).Result()
 	if data == "" || err != nil {
 		serv := services.ArticleService

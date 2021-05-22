@@ -120,6 +120,10 @@ func (s *articleService) GetTagArticles(tagId int64, cursor int64) (articles []m
 	return
 }
 
+func (s *articleService) CreateArticle(article *model.Article) error {
+	return dao.ArticleDao.Create(simpleDb.DB(), article)
+}
+
 // 发布文章
 //func (s *articleService) Publish(userId int64, title, summary, content, contentType string, tags []string,
 //	sourceUrl string) (article *model.Article, err error) {

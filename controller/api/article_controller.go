@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gin-test/model"
 	"gin-test/pkg/config"
+	"gin-test/pkg/gcache"
 	"gin-test/pkg/gredis"
 	"gin-test/pkg/queue"
 	"gin-test/pkg/simpleDb"
@@ -19,6 +20,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/go-redis/cache/v8"
 	"github.com/panjf2000/ants/v2"
 
 	"github.com/RichardKnop/machinery/v1/tasks"
@@ -28,6 +30,68 @@ import (
 )
 
 type ArticleController struct {
+}
+
+func (a *ArticleController) Create(c *gin.Context) {
+	article := model.Article{
+		//Model: model.Model{
+		//	CreatedAt: model.DateTime{carbon.Now()},
+		//	UpdatedAt: model.DateTime{carbon.Now().AddMinutes(2)},
+		//},
+		Title:        "测试添加文章",
+		Cid:          1,
+		Desc:         "测试添加文章desc测试添加文章desc",
+		Content:      "测试添加文章content测试添加文章content",
+		Img:          "",
+		CommentCount: 0,
+		ReadCount:    0,
+	}
+	err := services.ArticleService.CreateArticle(&article)
+	if err != nil {
+		c.JSON(http.StatusOK, utils.JsonError(err))
+		return
+	}
+	c.JSON(http.StatusOK, utils.JsonSuccess())
+}
+
+func (a *ArticleController) GetArticleById(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Query("id"))
+	articleInfo, _ := services.ArticleService.GetArticleById(id)
+
+	artJson, err := json.Marshal(articleInfo)
+	fmt.Println("json字符串的结果是：", string(artJson), err)
+
+	var articleInfo2 model.Article
+	err = json.Unmarshal(artJson, &articleInfo2)
+	fmt.Printf("解析json后的结果是：%s-----%v\n", err, articleInfo2)
+
+	c.JSON(http.StatusOK, utils.JsonData(gin.H{
+		"articleInfo":  articleInfo,
+		"articleInfo2": articleInfo2,
+	}))
+	return
+}
+
+//通过cache组件获取文章信息
+func (a *ArticleController) GetArticleByCache(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Query("id"))
+	key := "article:" + strconv.Itoa(id)
+	var article model.Article
+	err := gcache.GetCache().Get(context.TODO(), key, &article)
+	if err != nil || article == (model.Article{}) {
+		_ = gcache.GetCache().Once(&cache.Item{
+			Ctx:   context.TODO(),
+			Key:   key,
+			Value: &article,
+			TTL:   time.Minute * 5,
+			Do: func(item *cache.Item) (interface{}, error) {
+				fmt.Println("我来查询文章了")
+				return services.ArticleService.GetArticleById(id)
+			},
+		})
+	}
+	c.JSON(http.StatusOK, utils.JsonData(article))
+	return
 }
 
 func (a *ArticleController) GetArticle(c *gin.Context) {
