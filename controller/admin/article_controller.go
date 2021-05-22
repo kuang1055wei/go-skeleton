@@ -37,8 +37,8 @@ func (a *ArticleController) GetArticle(c *gin.Context) {
 	key := "article:" + strconv.Itoa(id)
 	data, err := gredis.GetRedis().Get(context.TODO(), key).Result()
 	if data == "" || err != nil {
-		art := model.Article{}
-		articleInfo, err = art.GetArticleById(id)
+		serv := services.ArticleService
+		articleInfo, err = serv.GetArticleById(id)
 		if articleInfo != (model.Article{}) {
 			cacheValue, _ := json.Marshal(articleInfo)
 			_ = gredis.GetRedis().Set(context.TODO(), key, cacheValue, 60*60*time.Second).Err()
@@ -114,7 +114,7 @@ func (a *ArticleController) SearchArticle(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	title := c.Query("title")
 
-	list, total, err := model.SearchArticle2(title, pageSize, page)
+	list, total, err := services.ArticleService.SearchArticle2(title, pageSize, page)
 	fmt.Printf("%+v\n\n", err)
 	c.JSON(http.StatusOK, gin.H{
 		"list":  list,
@@ -165,7 +165,7 @@ func (a *ArticleController) EditArticle(c *gin.Context) {
 	jsonStr, _ := json.Marshal(artForm)
 	var art model.Article
 	json.Unmarshal(jsonStr, &art)
-	result, err := model.EditArticle(int(art.ID), &art)
+	result, err := services.ArticleService.EditArticle(int(art.ID), &art)
 	c.JSON(http.StatusOK, gin.H{
 		"article": artForm,
 		"artJson": string(jsonStr),
@@ -230,8 +230,7 @@ func (a *ArticleController) getArt(id int) <-chan model.Article {
 	artChan := make(chan model.Article)
 	go func(id int) {
 
-		artModel := model.Article{}
-		art, _ := artModel.GetArticleById(id)
+		art, _ := services.ArticleService.GetArticleById(id)
 		artChan <- art
 	}(id)
 	return artChan
