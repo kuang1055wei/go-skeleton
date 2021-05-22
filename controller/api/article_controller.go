@@ -19,8 +19,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/go-redis/cache/v8"
+
+	"github.com/go-playground/validator/v10"
 	"github.com/panjf2000/ants/v2"
 
 	"github.com/RichardKnop/machinery/v1/tasks"
@@ -77,19 +78,33 @@ func (a *ArticleController) GetArticleByCache(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("id"))
 	key := "article:" + strconv.Itoa(id)
 	var article model.Article
-	err := gcache.GetCache().Get(context.TODO(), key, &article)
-	if err != nil || article == (model.Article{}) {
-		//实际上，外面的Get可以省略掉，直接用once
-		_ = gcache.GetCache().Once(&cache.Item{
-			Ctx:   context.TODO(),
-			Key:   key,
-			Value: &article,
-			TTL:   time.Minute * 5,
-			Do: func(item *cache.Item) (interface{}, error) {
-				fmt.Println("我来查询文章了")
-				return services.ArticleService.GetArticleById(id)
-			},
-		})
+	//err := gcache.GetCache().Get(context.TODO(), key, &article)
+	//if err != nil || article == (model.Article{}) {
+	//	//实际上，外面的Get可以省略掉，直接用once
+	//	_ = gcache.GetCache().Once(&cache.Item{
+	//		Ctx:   context.TODO(),
+	//		Key:   key,
+	//		Value: &article,
+	//		TTL:   time.Minute * 5,
+	//		Do: func(item *cache.Item) (interface{}, error) {
+	//			fmt.Println("我来查询文章了")
+	//			return services.ArticleService.GetArticleById(id)
+	//		},
+	//	})
+	//}
+	err := gcache.GetCache().Once(&cache.Item{
+		Ctx:   context.TODO(),
+		Key:   key,
+		Value: &article,
+		TTL:   time.Minute * 5,
+		Do: func(item *cache.Item) (interface{}, error) {
+			fmt.Println("我来查询文章了")
+			return services.ArticleService.GetArticleById(id)
+		},
+	})
+	if err != nil {
+		c.JSON(http.StatusOK, utils.JsonError(err))
+		return
 	}
 	c.JSON(http.StatusOK, utils.JsonData(article))
 	return
