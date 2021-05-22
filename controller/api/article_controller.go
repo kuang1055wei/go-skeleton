@@ -79,6 +79,7 @@ func (a *ArticleController) GetArticleByCache(c *gin.Context) {
 	var article model.Article
 	err := gcache.GetCache().Get(context.TODO(), key, &article)
 	if err != nil || article == (model.Article{}) {
+		//实际上，外面的Get可以省略掉，直接用once
 		_ = gcache.GetCache().Once(&cache.Item{
 			Ctx:   context.TODO(),
 			Key:   key,
