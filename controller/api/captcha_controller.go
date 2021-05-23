@@ -17,7 +17,6 @@ type CaptchaController struct {
 //生成验证码
 func (captcha *CaptchaController) GenerateCaptcha(c *gin.Context) {
 	var driver base64Captcha.Driver
-	//driverString := captcha.DriverString
 	driverString := base64Captcha.DriverString{
 		Height:          80,
 		Width:           240,
