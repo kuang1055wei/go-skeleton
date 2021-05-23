@@ -11,8 +11,8 @@ import (
 func LoadAdminRouter(e *gin.Engine) {
 	art := admin.ArticleController{}
 	//路由组
-	//adminRouter := e.Group("admin").Use(middleware.RateLimitMiddleware(time.Second, 100)).Use(middleware.JwtToken())
-	adminRouter := e.Group("admin").Use(middleware.RateLimitMiddleware(time.Second, 100))
+	adminRouter := e.Group("admin").Use(middleware.RateLimitMiddleware(time.Second, 100)).Use(middleware.JwtToken())
+	//adminRouter := e.Group("admin").Use(middleware.RateLimitMiddleware(time.Second, 100))
 	{
 		adminRouter.GET("/article/info", art.GetArticle)
 		adminRouter.GET("/article/list", art.GetArticleList)

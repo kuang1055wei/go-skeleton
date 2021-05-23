@@ -19,6 +19,7 @@ require (
 	github.com/golang-module/carbon v1.3.7
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/juju/ratelimit v1.0.1
+	github.com/mojocn/base64Captcha v1.3.4 // indirect
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/panjf2000/ants/v2 v2.4.4
 	github.com/pkg/errors v0.9.1
@@ -26,6 +27,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.16.0
+	golang.org/x/image v0.0.0-20210504121937-7319ad40d33e // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.0.5
