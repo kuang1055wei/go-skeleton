@@ -7,6 +7,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/RichardKnop/machinery v1.10.5
 	github.com/aws/aws-sdk-go v1.37.16 // indirect
+	github.com/bsm/redislock v0.7.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gin-contrib/cors v1.3.1
@@ -15,7 +16,7 @@ require (
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.2.0
 	github.com/go-redis/cache/v8 v8.4.1
-	github.com/go-redis/redis/v8 v8.8.2
+	github.com/go-redis/redis/v8 v8.8.3
 	github.com/golang-module/carbon v1.3.7
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/juju/ratelimit v1.0.1

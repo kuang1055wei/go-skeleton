@@ -19,6 +19,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/bsm/redislock"
+
 	"github.com/go-redis/cache/v8"
 
 	"github.com/go-playground/validator/v10"
@@ -488,4 +490,32 @@ func (a *ArticleController) TestQueue(c *gin.Context) {
 func (a *ArticleController) TestPanic(c *gin.Context) {
 	fmt.Println("测试panic")
 	panic("我是错误哈哈哈哈")
+}
+
+func (a *ArticleController) TryRedisLock(c *gin.Context) {
+	redis := gredis.GetRedis()
+	locker := redislock.New(redis)
+	ctx := context.Background()
+	//互斥锁
+	lock, err := locker.Obtain(ctx, "my_key", time.Minute, nil)
+	//defer func() {
+	//	_ = lock.Release(ctx)
+	//}()
+	//自旋锁
+	//retry := redislock.LimitRetry(redislock.LinearBackoff(time.Second), 10)
+	//lock, err := locker.Obtain(ctx, "my_key", time.Minute, &redislock.Options{
+	//	RetryStrategy: retry,
+	//})
+	//defer func() {
+	//	_ = lock.Release(ctx)
+	//}()
+	if err != nil {
+		c.JSON(http.StatusOK, utils.JsonError(err))
+		return
+	}
+	c.JSON(http.StatusOK, utils.JsonData(map[string]interface{}{
+		"token": lock.Token(),
+		//"ttl":   lock.TTL(ctx),
+	}))
+	return
 }

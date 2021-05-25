@@ -31,5 +31,6 @@ func LoadApiRouter(e *gin.Engine) {
 		apiRouter.GET("/article/testPanic", art.TestPanic)
 		apiRouter.GET("/captcha", captch.GenerateCaptcha)
 		apiRouter.GET("/verifyCaptcha", captch.VerifyCaptcha)
+		apiRouter.GET("/redisLock", art.TryRedisLock)
 	}
 }
