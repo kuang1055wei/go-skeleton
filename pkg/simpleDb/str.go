@@ -4,10 +4,11 @@ import (
 	"strings"
 	"unicode"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/sirupsen/logrus"
 
 	"github.com/PuerkitoBio/goquery"
-	uuid "github.com/iris-contrib/go.uuid"
 )
 
 /*
@@ -84,7 +85,7 @@ func Substr(s string, start, length int) string {
 
 // UUID
 func UUID() string {
-	u, _ := uuid.NewV4()
+	u := uuid.NewV4()
 	return strings.ReplaceAll(u.String(), "-", "")
 }
 

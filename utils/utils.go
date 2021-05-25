@@ -6,6 +6,8 @@ import (
 	"reflect"
 	"strings"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -54,4 +56,10 @@ func Empty(val interface{}) bool {
 		return v.IsNil()
 	}
 	return reflect.DeepEqual(val, reflect.Zero(v.Type()).Interface())
+}
+
+//uuid
+func UUID() string {
+	u := uuid.NewV4()
+	return strings.ReplaceAll(u.String(), "-", "")
 }

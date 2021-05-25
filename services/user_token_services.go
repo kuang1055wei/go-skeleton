@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 	"gin-test/pkg/gredis"
-	"strings"
+	"gin-test/utils"
 	"time"
-
-	uuid "github.com/iris-contrib/go.uuid"
 )
 
 var UserTokenService = newUserTokenService()
@@ -24,8 +22,7 @@ type userTokenService struct {
 func (s *userTokenService) GenerateRefreshToken(userId int64) (string, error) {
 	token := s.GetRefreshTokenByUserId(userId)
 	if token == "" {
-		uuidStr, _ := uuid.NewV4()
-		token = strings.ReplaceAll(uuidStr.String(), "-", "")
+		token = utils.UUID()
 		//30天过期时间
 		tokenExpireDays := time.Hour * 24 * 40
 		key := fmt.Sprintf("user:token2uid:%s", token)
