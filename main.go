@@ -94,11 +94,6 @@ func initGin() *gin.Engine {
 	return r
 }
 
-//func main2() {
-//	r := initGin()
-//	_ = r.Run(fmt.Sprintf(":%s", utils.Conf.ServerConfig.HttpPort)) //:8000
-//}
-
 func main() {
 	app.StartOn()
 
