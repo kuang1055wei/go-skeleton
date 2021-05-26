@@ -68,21 +68,7 @@ func init() {
 func initGin() *gin.Engine {
 	gin.SetMode(config.Conf.ServerConfig.AppMode)
 	r := gin.New()
-	//r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
-	//r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
-	//session
-	//store, _ := redis.NewStore(
-	//	10,
-	//	"tcp",
-	//	fmt.Sprintf("%s", utils.Conf.RedisConfig.Host),
-	//	utils.Conf.RedisConfig.Password,
-	//	[]byte("secret"),
-	//)
-	//r.Use(sessions.Sessions("mysession", store))
-
-	//r.Use(MiddleWare())
-	//r.LoadHTMLGlob("view/**/*")
 
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	r.Use(middleware.Cors())
