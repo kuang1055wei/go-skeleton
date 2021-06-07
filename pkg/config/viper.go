@@ -88,13 +88,14 @@ func InitConfig() error {
 	//fmt.Printf("%+v\n",*env)
 	//env := os.Getenv("env")
 	viper.SetConfigName("config")
-	viper.SetConfigType("ini")
+	viper.SetConfigType("yml")
 	viper.AddConfigPath("./configs")
 	err := viper.ReadInConfig()
 	if err != nil {
 		return err
 	}
 	_ = viper.Unmarshal(&Conf)
+	fmt.Println(Conf)
 	viper.WatchConfig() //监听配置文件改动
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		zap.L().Info(fmt.Sprintf("配置文件修改成功:%s", in.Name))
