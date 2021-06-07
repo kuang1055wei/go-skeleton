@@ -1,10 +1,10 @@
 package services
 
 import (
-	"gin-test/dao"
-	"gin-test/model"
-	"gin-test/model/constants"
-	"gin-test/pkg/simpleDb"
+	"go-skeleton/dao"
+	"go-skeleton/model"
+	"go-skeleton/model/constants"
+	"go-skeleton/pkg/simpleDb"
 
 	"gorm.io/gorm"
 )

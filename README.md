@@ -1,5 +1,5 @@
 
-# gin-test
+# go-skeleton
 gin框架脚手架案例 日志zap    
 数据库: [GORM文档](https://learnku.com/docs/gorm/v2)       
 验证: [validations](https://github.com/go-playground/validator)  

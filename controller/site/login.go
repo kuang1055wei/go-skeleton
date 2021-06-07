@@ -2,10 +2,10 @@ package site
 
 import (
 	"fmt"
-	"gin-test/pkg/auth"
-	"gin-test/pkg/common"
-	"gin-test/services"
-	"gin-test/utils"
+	"go-skeleton/pkg/auth"
+	"go-skeleton/pkg/common"
+	"go-skeleton/services"
+	"go-skeleton/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

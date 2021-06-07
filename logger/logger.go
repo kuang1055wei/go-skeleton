@@ -2,7 +2,7 @@ package logger
 
 import (
 	"fmt"
-	"gin-test/pkg/config"
+	"go-skeleton/pkg/config"
 	"net"
 	"net/http"
 	"net/http/httputil"

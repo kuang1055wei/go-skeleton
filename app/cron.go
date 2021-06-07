@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
-	"gin-test/pkg/gredis"
+	"go-skeleton/pkg/gredis"
 	"time"
 
 	"github.com/bsm/redislock"

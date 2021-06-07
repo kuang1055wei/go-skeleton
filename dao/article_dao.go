@@ -1,8 +1,8 @@
 package dao
 
 import (
-	"gin-test/model"
-	"gin-test/pkg/simpleDb"
+	"go-skeleton/model"
+	"go-skeleton/pkg/simpleDb"
 
 	"gorm.io/gorm"
 )

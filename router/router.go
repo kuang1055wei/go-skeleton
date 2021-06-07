@@ -1,7 +1,7 @@
 package router
 
 import (
-	"gin-test/controller/site"
+	"go-skeleton/controller/site"
 
 	"github.com/gin-gonic/gin"
 )

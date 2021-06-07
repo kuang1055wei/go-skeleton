@@ -3,8 +3,8 @@ package services
 import (
 	"context"
 	"fmt"
-	"gin-test/pkg/gredis"
-	"gin-test/utils"
+	"go-skeleton/pkg/gredis"
+	"go-skeleton/utils"
 	"time"
 )
 

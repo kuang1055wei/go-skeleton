@@ -3,7 +3,7 @@ package simpleDb
 import (
 	"errors"
 	"fmt"
-	"gin-test/pkg/simpleDb/date"
+	"go-skeleton/pkg/simpleDb/date"
 	"strconv"
 	"strings"
 	"time"

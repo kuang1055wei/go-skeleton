@@ -4,7 +4,7 @@ package gredis
 import (
 	"context"
 	"fmt"
-	"gin-test/pkg/config"
+	"go-skeleton/pkg/config"
 
 	"github.com/go-redis/redis/v8"
 )

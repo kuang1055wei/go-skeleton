@@ -1,8 +1,8 @@
 package services
 
 import (
-	"gin-test/model"
-	"gin-test/pkg/simpleDb/date"
+	"go-skeleton/model"
+	"go-skeleton/pkg/simpleDb/date"
 	"sync"
 
 	"go.uber.org/zap"

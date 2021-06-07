@@ -2,11 +2,13 @@ package config
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"time"
 )
+
 //tag:   https://github.com/mitchellh/mapstructure
 //全局配置
 type Config struct {
@@ -54,13 +56,13 @@ type DbConfig struct {
 
 //日志配置
 type LogConfig struct {
-	Level      string `mapstructure:"Level"`
-	Filename   string `mapstructure:"Filename"`
-	MaxSize    int    `mapstructure:"MaxSize"`
-	MaxAge     int    `mapstructure:"MaxAge"`
-	MaxBackups int    `mapstructure:"MaxBackups"`
+	Level       string `mapstructure:"Level"`
+	Filename    string `mapstructure:"Filename"`
+	MaxSize     int    `mapstructure:"MaxSize"`
+	MaxAge      int    `mapstructure:"MaxAge"`
+	MaxBackups  int    `mapstructure:"MaxBackups"`
 	LogSavePath string `mapstructure:"LogSavePath"`
-	TimeFormat string `mapstructure:"TimeFormat"`
+	TimeFormat  string `mapstructure:"TimeFormat"`
 }
 
 type QiniuConfig struct {
@@ -80,22 +82,22 @@ type RedisConfig struct {
 
 var Conf = new(Config)
 
-func InitConfig() error  {
+func InitConfig() error {
 	//env := pflag.String("env" , "dev" , "环境变量: dev | test | product")
 	//pflag.Parse()
 	//fmt.Printf("%+v\n",*env)
 	//env := os.Getenv("env")
 	viper.SetConfigName("config")
 	viper.SetConfigType("ini")
-	viper.AddConfigPath("./config")
+	viper.AddConfigPath("./configs")
 	err := viper.ReadInConfig()
 	if err != nil {
 		return err
 	}
 	_ = viper.Unmarshal(&Conf)
-	viper.WatchConfig()//监听配置文件改动
+	viper.WatchConfig() //监听配置文件改动
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		zap.L().Info(fmt.Sprintf("配置文件修改成功:%s" , in.Name))
+		zap.L().Info(fmt.Sprintf("配置文件修改成功:%s", in.Name))
 		_ = viper.Unmarshal(Conf)
 	})
 	//配置中心示例

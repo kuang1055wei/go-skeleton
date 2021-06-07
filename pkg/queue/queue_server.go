@@ -2,8 +2,8 @@ package queue
 
 import (
 	"fmt"
-	"gin-test/pkg/config"
-	"gin-test/task"
+	"go-skeleton/pkg/config"
+	"go-skeleton/task"
 
 	"github.com/RichardKnop/machinery/v1"
 	queueConfig "github.com/RichardKnop/machinery/v1/config"

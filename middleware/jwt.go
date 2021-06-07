@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"gin-test/pkg/auth"
-	"gin-test/pkg/common"
-	"gin-test/utils"
+	"go-skeleton/pkg/auth"
+	"go-skeleton/pkg/common"
+	"go-skeleton/utils"
 	"net/http"
 	"strings"
 

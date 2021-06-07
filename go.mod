@@ -1,4 +1,4 @@
-module gin-test
+module go-skeleton
 
 go 1.16
 

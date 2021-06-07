@@ -3,7 +3,7 @@ package simpleDb
 import (
 	"database/sql"
 	"fmt"
-	"gin-test/pkg/config"
+	"go-skeleton/pkg/config"
 	"log"
 	"os"
 	"time"

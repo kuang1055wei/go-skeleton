@@ -2,9 +2,9 @@ package api
 
 import (
 	"context"
-	"gin-test/pkg/gcaptcha"
-	"gin-test/pkg/gredis"
-	"gin-test/utils"
+	"go-skeleton/pkg/gcaptcha"
+	"go-skeleton/pkg/gredis"
+	"go-skeleton/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -1,8 +1,8 @@
 package router
 
 import (
-	"gin-test/controller/admin"
-	"gin-test/middleware"
+	"go-skeleton/controller/admin"
+	"go-skeleton/middleware"
 	"time"
 
 	"github.com/gin-gonic/gin"

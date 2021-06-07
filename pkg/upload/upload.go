@@ -2,9 +2,9 @@ package upload
 
 import (
 	"fmt"
-	"gin-test/pkg/config"
-	"gin-test/pkg/file"
-	"gin-test/utils"
+	"go-skeleton/pkg/config"
+	"go-skeleton/pkg/file"
+	"go-skeleton/utils"
 	"mime/multipart"
 	"os"
 	"path"

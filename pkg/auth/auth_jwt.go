@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"gin-test/pkg/common"
-	"gin-test/pkg/config"
+	"go-skeleton/pkg/common"
+	"go-skeleton/pkg/config"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/golang-module/carbon"

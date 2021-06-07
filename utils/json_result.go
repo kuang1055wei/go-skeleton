@@ -1,6 +1,6 @@
 package utils
 
-import "gin-test/pkg/common"
+import "go-skeleton/pkg/common"
 
 type JsonResult struct {
 	ErrorCode int         `json:"errorCode"`

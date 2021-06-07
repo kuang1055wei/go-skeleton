@@ -2,7 +2,7 @@ package gcache
 
 import (
 	"encoding/json"
-	"gin-test/pkg/gredis"
+	"go-skeleton/pkg/gredis"
 	"sync"
 
 	"github.com/go-redis/cache/v8"
