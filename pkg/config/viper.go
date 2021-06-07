@@ -95,7 +95,6 @@ func InitConfig() error {
 		return err
 	}
 	_ = viper.Unmarshal(&Conf)
-	fmt.Println(Conf)
 	viper.WatchConfig() //监听配置文件改动
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		zap.L().Info(fmt.Sprintf("配置文件修改成功:%s", in.Name))
