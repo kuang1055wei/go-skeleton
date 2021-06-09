@@ -18,6 +18,7 @@ require (
 	github.com/go-redis/cache/v8 v8.4.1
 	github.com/go-redis/redis/v8 v8.8.3
 	github.com/golang-module/carbon v1.3.7
+	github.com/hashicorp/go-version v1.3.0
 	github.com/juju/ratelimit v1.0.1
 	github.com/mojocn/base64Captcha v1.3.4
 	github.com/opentracing/opentracing-go v1.2.0
@@ -27,6 +28,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.7.1
+	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.16.0
 	golang.org/x/image v0.0.0-20210504121937-7319ad40d33e // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
