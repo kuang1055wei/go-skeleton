@@ -444,6 +444,31 @@ func (a *ArticleController) TestQueue(c *gin.Context) {
 	//	Name: "panic",
 	//})
 
+	for i := 0; i < 10; i++ {
+		go func(i int) {
+			res, _ := server.SendTask(&tasks.Signature{
+				Name: "add",
+				Args: []tasks.Arg{
+					{
+						Type:  "int64",
+						Value: 1,
+					},
+					{
+						Type:  "int64",
+						Value: i,
+					},
+				},
+				RetryCount:   3,
+				RetryTimeout: 60,
+			})
+			time.Sleep(time.Second * 2)
+			results := res.GetState().Results[0].Value
+			fmt.Println("结果是", results)
+			//resStr, _ := res.Get(time.Second * 2)
+			//fmt.Println("结果是", resStr[0])
+		}(i)
+	}
+
 	//asyncResult, err = server.SendTask(&tasks.Signature{
 	//	Name: "nofunctiontest",
 	//	Args: []tasks.Arg{
