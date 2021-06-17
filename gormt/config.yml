@@ -1,0 +1,24 @@
+base:
+    is_dev: false
+db_info:
+    host: 192.168.50.100
+    port: 3306
+    username: root
+    password: root
+    database: ginblog
+    type: 0
+out_dir: ./model
+url_tag: json
+language: 中 文
+db_tag: gorm
+simple: false
+is_web_tag: true
+is_web_tag_pk_hidden: true
+is_foreign_key: true
+is_out_sql: false
+is_out_func: false
+is_gui: true
+is_table_name: true
+is_null_to_point: true
+table_prefix: ""
+

@@ -7,16 +7,15 @@ import (
 	"gorm.io/gorm"
 )
 
-var ArticleDao = neArticleDao()
+var ArticleDao = newArticleDao()
 
-func neArticleDao() *articleDao {
+func newArticleDao() *articleDao {
 	return &articleDao{}
 }
 
 type articleDao struct {
 }
 
-//查询兑换码
 func (c *articleDao) Get(db *gorm.DB, id int64) *model.Article {
 	code := &model.Article{}
 	res := db.First(code, id)
