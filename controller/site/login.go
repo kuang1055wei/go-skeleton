@@ -19,16 +19,18 @@ type LoginForm struct {
 func Login(c *gin.Context) {
 	var form LoginForm
 	if c.ShouldBind(&form) == nil {
-		//真实情况应该这里是登陆验证逻辑
-		if form.User == "user" && form.Password == "password" {
-			uid := 1
-			token, err := auth.GenerateToken(uid)
+		//测试账号 admin  123456
+		userService := services.UserService
+		user := userService.Take(map[string]interface{}{"username": form.User})
+
+		if user != nil && utils.ValidatePassword(user.Password, form.Password) {
+			token, err := auth.GenerateToken(int(user.ID))
 			if err != nil {
 				c.JSON(200, utils.JsonError(err))
 				return
 			}
 			//refreshToken应该放入数据库或者缓存中
-			refreshToken, err := services.UserTokenService.GenerateRefreshToken(int64(uid))
+			refreshToken, err := services.UserTokenService.GenerateRefreshToken(int64(user.ID))
 			if err != nil {
 				c.JSON(200, utils.JsonError(err))
 				return
@@ -36,6 +38,7 @@ func Login(c *gin.Context) {
 			c.JSON(200, utils.JsonData(gin.H{
 				"refreshToken": refreshToken,
 				"token":        token,
+				"user":         user,
 			}))
 			return
 		} else {
@@ -44,6 +47,7 @@ func Login(c *gin.Context) {
 		}
 	} else {
 		c.JSON(200, utils.JsonErrorMsg("缺少参数"))
+		return
 	}
 }
 

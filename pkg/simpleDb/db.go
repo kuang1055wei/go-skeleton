@@ -61,7 +61,7 @@ func dbDial(cfg *dbConfig) error {
 			log.New(os.Stdout, "\r\n", log.LstdFlags),
 			logger.Config{
 				SlowThreshold: 200 * time.Millisecond,
-				LogLevel:      logger.Silent, //log级别改此项即可
+				LogLevel:      logger.Info, //log级别改此项即可
 				Colorful:      true,
 			},
 		)

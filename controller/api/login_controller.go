@@ -20,6 +20,9 @@ type LoginForm struct {
 func (l *LoginController) Login(c *gin.Context) {
 	var form LoginForm
 	if c.ShouldBind(&form) == nil {
+		userService := services.UserService
+		user := userService.Take(map[string]interface{}{"username": form.User})
+
 		//真实情况应该这里是登陆验证逻辑
 		if form.User == "user" && form.Password == "password" {
 			uid := 1
@@ -37,6 +40,7 @@ func (l *LoginController) Login(c *gin.Context) {
 			c.JSON(200, utils.JsonData(gin.H{
 				"refreshToken": refreshToken,
 				"token":        token,
+				"user":         user,
 			}))
 			return
 		} else {

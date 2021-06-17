@@ -7,7 +7,7 @@ import (
 	"go-skeleton/pkg/simpleDb"
 )
 
-var UserService = newUserTokenService()
+var UserService = newUserService()
 
 func newUserService() *userService {
 	return &userService{}

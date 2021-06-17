@@ -16,7 +16,6 @@ func newUserDao() *userDao {
 type userDao struct {
 }
 
-//查询兑换码
 func (c *userDao) Get(db *gorm.DB, id int64) *model.User {
 	code := &model.User{}
 	res := db.First(code, id)
