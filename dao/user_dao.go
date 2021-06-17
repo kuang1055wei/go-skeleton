@@ -71,27 +71,9 @@ func (c *userDao) Delete(db *gorm.DB, id int64) {
 }
 
 // BatchSave 批量插入数据
-//func (c *userDao) BatchSave(db *gorm.DB, courseCode []*model.User) error {
-//	cc := model.User{}
-//	var buffer bytes.Buffer
-//	sql := "insert into `%s` (`course_id`,`goods_id`,`ship_code`,`exchange_code`) VALUES "
-//	sql = fmt.Sprintf(sql, cc.TableName())
-//
-//	if _, err := buffer.WriteString(sql); err != nil {
-//		return err
-//	}
-//	for key, val := range courseCode {
-//		if val == nil {
-//			continue
-//		}
-//		if len(courseCode)-1 == key {
-//			buffer.WriteString(fmt.Sprintf("('%d','%d','%s','%s');", val.CourseID, val.GoodsID, val.ShipCode, val.ExchangeCode))
-//		} else {
-//			buffer.WriteString(fmt.Sprintf("('%d','%d','%s','%s'),", val.CourseID, val.GoodsID, val.ShipCode, val.ExchangeCode))
-//		}
-//	}
-//	return db.Exec(buffer.String()).Error
-//}
+func (c *userDao) BatchSave(db *gorm.DB, courseCode []*model.User) error {
+	return db.CreateInBatches(courseCode, len(courseCode)).Error
+}
 
 func (c *userDao) FindPageByParams(db *gorm.DB, params *simpleDb.QueryParams) (list []model.User, paging *simpleDb.Paging) {
 	return c.FindPageByCnd(db, &params.SqlCnd)
