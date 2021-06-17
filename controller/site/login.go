@@ -16,6 +16,21 @@ type LoginForm struct {
 	Password string `form:"password" binding:"required"`
 }
 
+func Register(c *gin.Context) {
+	var form LoginForm
+	if c.ShouldBind(&form) == nil {
+		user, err := services.UserService.SignUp(form.User, form.Password, form.Password)
+		if err != nil {
+			c.JSON(http.StatusOK, utils.JsonError(err))
+			return
+		}
+		c.JSON(http.StatusOK, utils.JsonData(user))
+		return
+	}
+	c.JSON(200, utils.JsonErrorMsg("缺少参数"))
+	return
+}
+
 func Login(c *gin.Context) {
 	var form LoginForm
 	if c.ShouldBind(&form) == nil {

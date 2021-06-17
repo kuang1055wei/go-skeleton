@@ -108,3 +108,7 @@ func (c *userDao) FindPageByCnd(db *gorm.DB, cnd *simpleDb.SqlCnd) (list []model
 	}
 	return
 }
+
+func (r *userDao) GetByUsername(db *gorm.DB, username string) *model.User {
+	return r.Take(db, "username = ?", username)
+}

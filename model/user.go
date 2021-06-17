@@ -7,7 +7,7 @@ type User struct {
 	gorm.Model
 	Username string `gorm:"column:username;type:varchar(20);not null" json:"username"`
 	Password string `gorm:"column:password;type:varchar(500);not null" json:"-"`
-	Role     *int64 `gorm:"column:role;type:bigint(20);default:2" json:"role"`
+	Role     int64  `gorm:"column:role;type:bigint(20);default:2" json:"role"`
 }
 
 // TableName get sql table name.获取数据库表名

@@ -12,5 +12,6 @@ func LoadDefault(e *gin.Engine) {
 	e.GET("/site/hello", site.Hello)
 	e.POST("/site/login", site.Login)
 	e.POST("/site/refreshToken", site.RefreshAccessToken)
+	e.POST("/site/register", site.Register)
 
 }

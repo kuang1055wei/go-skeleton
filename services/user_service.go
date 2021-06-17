@@ -1,10 +1,13 @@
 package services
 
 import (
+	"errors"
 	"go-skeleton/dao"
 	"go-skeleton/model"
 	"go-skeleton/model/constants"
 	"go-skeleton/pkg/simpleDb"
+	"go-skeleton/utils"
+	"strings"
 )
 
 var UserService = newUserService()
@@ -72,4 +75,46 @@ func (s *userService) GetUserInIds(UserIds []int64) []model.User {
 	var Users []model.User
 	simpleDb.DB().Where("id in (?)", UserIds).Order("id desc").Find(&Users)
 	return Users
+}
+
+// GetByUsername 根据用户名查找
+func (s *userService) GetByUsername(username string) *model.User {
+	return dao.UserDao.GetByUsername(simpleDb.DB(), username)
+}
+
+// isUsernameExists 用户名是否存在
+func (s *userService) isUsernameExists(username string) bool {
+	return s.GetByUsername(username) != nil
+}
+
+//注册
+func (s *userService) SignUp(username, password, rePassword string) (*model.User, error) {
+	username = strings.TrimSpace(username)
+	password = strings.TrimSpace(password)
+
+	err := utils.IsPassword(password, rePassword)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(username) > 0 {
+		if err := utils.IsUsername(username); err != nil {
+			return nil, err
+		}
+		if s.isUsernameExists(username) {
+			return nil, errors.New("用户名[" + username + "]已被占用")
+		}
+	}
+
+	user := &model.User{
+		Username: username,
+		Password: utils.EncodePassword(password),
+		Role:     1,
+	}
+
+	err = dao.UserDao.Create(simpleDb.DB(), user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
