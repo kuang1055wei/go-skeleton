@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"go-skeleton/pkg/common"
 	"go-skeleton/pkg/config"
+	"go-skeleton/pkg/errors"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/golang-module/carbon"
@@ -35,7 +35,7 @@ func GenerateToken(id int) (string, error) {
 }
 
 // 验证token
-func CheckToken(token string) (*MyClaims, *common.CodeError) {
+func CheckToken(token string) (*MyClaims, *errors.CodeError) {
 	var claims MyClaims
 
 	claimsToken, err := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
@@ -46,24 +46,24 @@ func CheckToken(token string) (*MyClaims, *common.CodeError) {
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
 				//token错误
-				return nil, common.TokenWrongError
+				return nil, errors.TokenWrongError
 			} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
 				//token过期
-				return nil, common.TokenRuntimeError
+				return nil, errors.TokenRuntimeError
 			} else {
 				//token格式错误
-				return nil, common.TokenTypeWrongError
+				return nil, errors.TokenTypeWrongError
 			}
 		}
 	}
 
 	if claimsToken == nil {
-		return nil, common.TokenWrongError
+		return nil, errors.TokenWrongError
 	}
 
 	if claim, ok := claimsToken.Claims.(*MyClaims); ok && claimsToken.Valid {
 		return claim, nil
 	} else {
-		return nil, common.TokenWrongError
+		return nil, errors.TokenWrongError
 	}
 }

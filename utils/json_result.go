@@ -1,6 +1,6 @@
 package utils
 
-import "go-skeleton/pkg/common"
+import "go-skeleton/pkg/errors"
 
 type JsonResult struct {
 	ErrorCode int         `json:"errorCode"`
@@ -48,7 +48,7 @@ func JsonSuccess() *JsonResult {
 	}
 }
 
-func JsonCodeError(err *common.CodeError) *JsonResult {
+func JsonCodeError(err *errors.CodeError) *JsonResult {
 	return &JsonResult{
 		ErrorCode: err.Code,
 		Message:   err.Message,
@@ -85,5 +85,5 @@ func JsonErrorData(code int, message string, data interface{}) *JsonResult {
 }
 
 func JsonError(err error) *JsonResult {
-	return JsonCodeError(common.FromError(err))
+	return JsonCodeError(errors.FromError(err))
 }

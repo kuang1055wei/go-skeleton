@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"go-skeleton/pkg/auth"
-	"go-skeleton/pkg/common"
+	"go-skeleton/pkg/errors"
 	"go-skeleton/utils"
 	"net/http"
 	"strings"
@@ -15,19 +15,19 @@ func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenHeader := c.Request.Header.Get("Authorization")
 		if tokenHeader == "" {
-			c.JSON(http.StatusOK, utils.JsonCodeError(common.TokenExistError))
+			c.JSON(http.StatusOK, utils.JsonCodeError(errors.TokenExistError))
 			c.Abort()
 			return
 		}
 		checkToken := strings.Split(tokenHeader, " ")
 		if len(checkToken) == 0 {
-			c.JSON(http.StatusOK, utils.JsonCodeError(common.TokenTypeWrongError))
+			c.JSON(http.StatusOK, utils.JsonCodeError(errors.TokenTypeWrongError))
 			c.Abort()
 			return
 		}
 
 		if len(checkToken) != 2 || checkToken[0] != "Bearer" {
-			c.JSON(http.StatusOK, utils.JsonCodeError(common.TokenTypeWrongError))
+			c.JSON(http.StatusOK, utils.JsonCodeError(errors.TokenTypeWrongError))
 			c.Abort()
 			return
 		}

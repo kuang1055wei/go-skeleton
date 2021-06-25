@@ -1,4 +1,4 @@
-package common
+package errors
 
 var (
 	//refreshToken相关
@@ -8,6 +8,5 @@ var (
 	TokenRuntimeError   = NewError(1005, "token已过期")
 	TokenWrongError     = NewError(1006, "token不正确")
 	TokenTypeWrongError = NewError(1007, "token格式不正确")
-
-	CaptchaError = NewError(1000, "验证码错误")
+	CaptchaError        = NewError(1000, "验证码错误")
 )

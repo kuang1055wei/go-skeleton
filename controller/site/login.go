@@ -3,7 +3,7 @@ package site
 import (
 	"fmt"
 	"go-skeleton/pkg/auth"
-	"go-skeleton/pkg/common"
+	"go-skeleton/pkg/errors"
 	"go-skeleton/services"
 	"go-skeleton/utils"
 	"net/http"
@@ -74,7 +74,7 @@ func RefreshAccessToken(c *gin.Context) {
 	}
 	userId, err := services.UserTokenService.GetUserIdByToken(refreshToken)
 	if userId == 0 {
-		c.JSON(200, utils.JsonCodeError(common.RefreshTokenError))
+		c.JSON(200, utils.JsonCodeError(errors.RefreshTokenError))
 		return
 	}
 	token, err := auth.GenerateToken(int(userId))

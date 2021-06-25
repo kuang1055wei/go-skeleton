@@ -2,7 +2,7 @@ package api
 
 import (
 	"go-skeleton/pkg/auth"
-	"go-skeleton/pkg/common"
+	"go-skeleton/pkg/errors"
 	"go-skeleton/services"
 	"go-skeleton/utils"
 
@@ -60,7 +60,7 @@ func (l *LoginController) RefreshAccessToken(c *gin.Context) {
 	}
 	userId, err := services.UserTokenService.GetUserIdByToken(refreshToken)
 	if userId == 0 {
-		c.JSON(200, utils.JsonCodeError(common.RefreshTokenError))
+		c.JSON(200, utils.JsonCodeError(errors.RefreshTokenError))
 		return
 	}
 	token, err := auth.GenerateToken(int(userId))
