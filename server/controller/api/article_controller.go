@@ -42,8 +42,8 @@ type ArticleController struct {
 // @Produce application/json
 // @Param object body model.Article false "文章"
 // @Param Authorization header string false "Bearer 用户令牌"
-// @Success 200 {string} json "{"ErrorCode":0,"Data:"",Success":true}"
-// @Failure 200 {string} json "{"ErrorCode":0,"Data:"",Success":false}"
+// @Success 200 {string} json "{"errorCode":0,"data:"",success":true}"
+// @Failure 200 {string} json "{"errorCode":0,"data:"",success":false}"
 // @Router /api/article/create [post]
 func (a *ArticleController) Create(c *gin.Context) {
 	article := model.Article{
@@ -74,8 +74,8 @@ func (a *ArticleController) Create(c *gin.Context) {
 // @Produce application/json
 // @Param id query int true "标题"
 // @Param Authorization header string false "Bearer 用户令牌"
-// @Success 200 {string} json "{"ErrorCode":0,"Data:{"articleInfo":{},"articleInfo2":{}},Success":true}"
-// @Failure 200 {string} json "{"ErrorCode":0,"Data:"",Success":false}"
+// @Failure 400 {string} json "{"errorCode":0,"data:"",success":false}"
+// @Success 200 {object} utils.JsonResult{data=model.Article} "文章"
 // @Router /api/article/getArticleById [get]
 func (a *ArticleController) GetArticleById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("id"))
