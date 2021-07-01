@@ -16,5 +16,7 @@ app.log
 # Dependency directories (remove the comment below to include it)
 vendor/
 
-/tmp/
-/runtime/*
+/server/tmp/
+/server/runtime/*
+
+/server/docs

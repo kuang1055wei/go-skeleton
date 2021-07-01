@@ -35,6 +35,17 @@ import (
 type ArticleController struct {
 }
 
+// @Tags 文章接口
+// @Summary 创建文章
+// @Description 创建文章
+// @Accept application/json
+// @Produce application/json
+// @Param title body string true "标题"
+// @Param desc body string false "description"
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Success 200 {string} json "{"ErrorCode":0,"Data:"",Success":true}"
+// @Failure 200 {string} json "{"ErrorCode":0,"Data:"",Success":false}"
+// @Router /api/article/create [post]
 func (a *ArticleController) Create(c *gin.Context) {
 	article := model.Article{
 		//Model: model.Model{
@@ -57,6 +68,16 @@ func (a *ArticleController) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.JsonSuccess())
 }
 
+// @Tags 文章接口
+// @Summary 根据ID获取文章
+// @Description 根据ID获取文章
+// @Accept application/json
+// @Produce application/json
+// @Param id query int true "标题"
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Success 200 {string} json "{"ErrorCode":0,"Data:{"articleInfo":{},"articleInfo2":{}},Success":true}"
+// @Failure 200 {string} json "{"ErrorCode":0,"Data:"",Success":false}"
+// @Router /api/article/getArticleById [get]
 func (a *ArticleController) GetArticleById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("id"))
 	articleInfo, _ := services.ArticleService.GetArticleById(id)

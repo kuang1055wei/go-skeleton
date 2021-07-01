@@ -9,7 +9,8 @@ redis:[goredis](https://github.com/go-redis/redis)
 优雅关机:[参考](https://www.liwenzhou.com/posts/Go/graceful_shutdown/)  
 jwt:[jwt-go](https://github.com/dgrijalva/jwt-go)  
 协程池:[ants](https://github.com/panjf2000/ants)  
-分布式队列：[machinery](https://github.com/RichardKnop/machinery#retry-tasks)
+分布式队列：[machinery](https://github.com/RichardKnop/machinery#retry-tasks)  
+swagger文档：[swagger](https://www.liwenzhou.com/posts/Go/gin_swagger/)
 
 ## 常用方法
 **包文件**:pkg  
@@ -19,8 +20,16 @@ jwt:[jwt-go](https://github.com/dgrijalva/jwt-go)
 **常用工具方法**: utils/utils.go  
 **验证翻译中文** : utils/trans.go  
 
-# 运行
-1、go mod tidy     
-2、go mod download     
-3、air or go run main.go    
-4、localhost:8000
+## 命令 
+- swagger   
+   1. cd server
+   2. swag init
+   3. http://localhost:8000/swagger/index.html
+
+
+## 运行
+1. cd server
+2. go mod tidy
+3. go mod download
+4. air or go run main.go
+5. localhost:8000

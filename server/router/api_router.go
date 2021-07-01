@@ -17,7 +17,7 @@ func LoadApiRouter(e *gin.Engine) {
 	{
 		apiRouter.GET("/article/getArticleById", art.GetArticleById)
 		apiRouter.GET("/article/getArticleByCache", art.GetArticleByCache)
-		apiRouter.GET("/article/create", art.Create)
+		apiRouter.POST("/article/create", art.Create)
 		apiRouter.GET("/article/info", art.GetArticle)
 		apiRouter.GET("/article/list", art.GetArticleList)
 		apiRouter.GET("/article/myHttp", art.MyHttp)

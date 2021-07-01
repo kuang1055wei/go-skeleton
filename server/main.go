@@ -80,6 +80,20 @@ func initGin() *gin.Engine {
 	return r
 }
 
+// @title go-skeleton
+// @version 1.0
+// @description go-skeleton
+// @termsOfService https://github.com/kuang1055wei/go-skeleton
+
+// @contact.name uncle-kw
+// @contact.url https://github.com/kuang1055wei/go-skeleton
+// @contact.email xkuangwei@qq.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8000
+// @BasePath /
 func main() {
 	app.StartOn()
 
