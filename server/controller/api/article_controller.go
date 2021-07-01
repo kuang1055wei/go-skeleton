@@ -40,8 +40,7 @@ type ArticleController struct {
 // @Description 创建文章
 // @Accept application/json
 // @Produce application/json
-// @Param title body string true "标题"
-// @Param desc body string false "description"
+// @Param object body model.Article false "文章"
 // @Param Authorization header string false "Bearer 用户令牌"
 // @Success 200 {string} json "{"ErrorCode":0,"Data:"",Success":true}"
 // @Failure 200 {string} json "{"ErrorCode":0,"Data:"",Success":false}"

@@ -11,7 +11,7 @@ jwt:[jwt-go](https://github.com/dgrijalva/jwt-go)
 协程池:[ants](https://github.com/panjf2000/ants)  
 分布式队列：[machinery](https://github.com/RichardKnop/machinery#retry-tasks)  
 swagger选项: [swagger](https://swaggo.github.io/swaggo.io/declarative_comments_format/general_api_info.html)
-swagger go文档：[swagger](https://www.liwenzhou.com/posts/Go/gin_swagger/)
+swagger go文档：[swagger](https://github.com/swaggo/swag/blob/master/README_zh-CN.md)
 
 ## 常用方法
 **包文件**:pkg  
