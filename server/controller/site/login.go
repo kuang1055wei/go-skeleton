@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-skeleton/pkg/auth"
 	"go-skeleton/pkg/errors"
+	"go-skeleton/pkg/jsonresult"
 	"go-skeleton/services"
 	"go-skeleton/utils"
 	"net/http"
@@ -21,13 +22,13 @@ func Register(c *gin.Context) {
 	if c.ShouldBind(&form) == nil {
 		user, err := services.UserService.SignUp(form.User, form.Password, form.Password)
 		if err != nil {
-			c.JSON(http.StatusOK, utils.JsonError(err))
+			c.JSON(http.StatusOK, jsonresult.JsonError(err))
 			return
 		}
-		c.JSON(http.StatusOK, utils.JsonData(user))
+		c.JSON(http.StatusOK, jsonresult.JsonData(user))
 		return
 	}
-	c.JSON(200, utils.JsonErrorMsg("缺少参数"))
+	c.JSON(200, jsonresult.JsonErrorMsg("缺少参数"))
 	return
 }
 
@@ -41,27 +42,27 @@ func Login(c *gin.Context) {
 		if user != nil && utils.ValidatePassword(user.Password, form.Password) {
 			token, err := auth.GenerateToken(int(user.ID))
 			if err != nil {
-				c.JSON(200, utils.JsonError(err))
+				c.JSON(200, jsonresult.JsonError(err))
 				return
 			}
 			//refreshToken应该放入数据库或者缓存中
 			refreshToken, err := services.UserTokenService.GenerateRefreshToken(int64(user.ID))
 			if err != nil {
-				c.JSON(200, utils.JsonError(err))
+				c.JSON(200, jsonresult.JsonError(err))
 				return
 			}
-			c.JSON(200, utils.JsonData(gin.H{
+			c.JSON(200, jsonresult.JsonData(gin.H{
 				"refreshToken": refreshToken,
 				"token":        token,
 				"user":         user,
 			}))
 			return
 		} else {
-			c.JSON(200, utils.JsonErrorMsg("unauthorized"))
+			c.JSON(200, jsonresult.JsonErrorMsg("unauthorized"))
 			return
 		}
 	} else {
-		c.JSON(200, utils.JsonErrorMsg("缺少参数"))
+		c.JSON(200, jsonresult.JsonErrorMsg("缺少参数"))
 		return
 	}
 }
@@ -70,19 +71,19 @@ func Login(c *gin.Context) {
 func RefreshAccessToken(c *gin.Context) {
 	refreshToken := c.PostForm("refreshToken")
 	if refreshToken == "" {
-		c.JSON(200, utils.JsonErrorMsg("refreshToken不能为空"))
+		c.JSON(200, jsonresult.JsonErrorMsg("refreshToken不能为空"))
 	}
 	userId, err := services.UserTokenService.GetUserIdByToken(refreshToken)
 	if userId == 0 {
-		c.JSON(200, utils.JsonCodeError(errors.RefreshTokenError))
+		c.JSON(200, jsonresult.JsonCodeError(errors.RefreshTokenError))
 		return
 	}
 	token, err := auth.GenerateToken(int(userId))
 	if err != nil {
-		c.JSON(200, utils.JsonError(err))
+		c.JSON(200, jsonresult.JsonError(err))
 		return
 	}
-	c.JSON(200, utils.JsonData(gin.H{
+	c.JSON(200, jsonresult.JsonData(gin.H{
 		"token": token,
 	}))
 	return

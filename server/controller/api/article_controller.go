@@ -8,6 +8,7 @@ import (
 	"go-skeleton/pkg/config"
 	"go-skeleton/pkg/gcache"
 	"go-skeleton/pkg/gredis"
+	"go-skeleton/pkg/jsonresult"
 	"go-skeleton/pkg/queue"
 	"go-skeleton/pkg/simpleDb"
 	"go-skeleton/pkg/upload"
@@ -61,10 +62,10 @@ func (a *ArticleController) Create(c *gin.Context) {
 	}
 	err := services.ArticleService.CreateArticle(&article)
 	if err != nil {
-		c.JSON(http.StatusOK, utils.JsonError(err))
+		c.JSON(http.StatusOK, jsonresult.JsonError(err))
 		return
 	}
-	c.JSON(http.StatusOK, utils.JsonSuccess())
+	c.JSON(http.StatusOK, jsonresult.JsonSuccess())
 }
 
 // @Tags 文章接口
@@ -88,7 +89,7 @@ func (a *ArticleController) GetArticleById(c *gin.Context) {
 	err = json.Unmarshal(artJson, &articleInfo2)
 	fmt.Printf("解析json后的结果是：%s-----%v\n", err, articleInfo2)
 
-	c.JSON(http.StatusOK, utils.JsonData(gin.H{
+	c.JSON(http.StatusOK, jsonresult.JsonData(gin.H{
 		"articleInfo":  articleInfo,
 		"articleInfo2": articleInfo2,
 	}))
@@ -125,10 +126,10 @@ func (a *ArticleController) GetArticleByCache(c *gin.Context) {
 		},
 	})
 	if err != nil {
-		c.JSON(http.StatusOK, utils.JsonError(err))
+		c.JSON(http.StatusOK, jsonresult.JsonError(err))
 		return
 	}
-	c.JSON(http.StatusOK, utils.JsonData(article))
+	c.JSON(http.StatusOK, jsonresult.JsonData(article))
 	return
 }
 
@@ -517,7 +518,7 @@ func (a *ArticleController) TestQueue(c *gin.Context) {
 		RetryCount: 3,
 	})
 	if err != nil {
-		c.JSON(http.StatusOK, utils.JsonError(err))
+		c.JSON(http.StatusOK, jsonresult.JsonError(err))
 		return
 	}
 	//results, err := asyncResult.Get(time.Millisecond * 5)
@@ -526,7 +527,7 @@ func (a *ArticleController) TestQueue(c *gin.Context) {
 	//	"result":  tasks.HumanReadableResults(results),
 	//}))
 
-	c.JSON(http.StatusOK, utils.JsonData(gin.H{
+	c.JSON(http.StatusOK, jsonresult.JsonData(gin.H{
 		"result": asyncResult,
 	}))
 	return
@@ -555,10 +556,10 @@ func (a *ArticleController) TryRedisLock(c *gin.Context) {
 	//	_ = lock.Release(ctx)
 	//}()
 	if err != nil {
-		c.JSON(http.StatusOK, utils.JsonError(err))
+		c.JSON(http.StatusOK, jsonresult.JsonError(err))
 		return
 	}
-	c.JSON(http.StatusOK, utils.JsonData(map[string]interface{}{
+	c.JSON(http.StatusOK, jsonresult.JsonData(map[string]interface{}{
 		"token": lock.Token(),
 		//"ttl":   lock.TTL(ctx),
 	}))

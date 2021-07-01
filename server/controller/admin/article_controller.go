@@ -8,6 +8,7 @@ import (
 	"go-skeleton/pkg/config"
 	"go-skeleton/pkg/gcache"
 	"go-skeleton/pkg/gredis"
+	"go-skeleton/pkg/jsonresult"
 	"go-skeleton/pkg/queue"
 	"go-skeleton/pkg/simpleDb"
 	"go-skeleton/pkg/upload"
@@ -411,7 +412,7 @@ func (a *ArticleController) TestQueue(c *gin.Context) {
 		RetryCount: 3,
 	})
 	if err != nil {
-		c.JSON(http.StatusOK, utils.JsonError(err))
+		c.JSON(http.StatusOK, jsonresult.JsonError(err))
 		return
 	}
 	//results, err := asyncResult.Get(time.Millisecond * 5)
@@ -420,7 +421,7 @@ func (a *ArticleController) TestQueue(c *gin.Context) {
 	//	"result":  tasks.HumanReadableResults(results),
 	//}))
 
-	c.JSON(http.StatusOK, utils.JsonData(gin.H{
+	c.JSON(http.StatusOK, jsonresult.JsonData(gin.H{
 		"result": asyncResult,
 	}))
 	return

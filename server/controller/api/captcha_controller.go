@@ -4,7 +4,7 @@ import (
 	"context"
 	"go-skeleton/pkg/gcaptcha"
 	"go-skeleton/pkg/gredis"
-	"go-skeleton/utils"
+	"go-skeleton/pkg/jsonresult"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,10 +33,10 @@ func (captcha *CaptchaController) GenerateCaptcha(c *gin.Context) {
 	captchaObj := base64Captcha.NewCaptcha(driver, store)
 	id, b64s, err := captchaObj.Generate()
 	if err != nil {
-		c.JSON(http.StatusOK, utils.JsonError(err))
+		c.JSON(http.StatusOK, jsonresult.JsonError(err))
 		return
 	}
-	c.JSON(http.StatusOK, utils.JsonData(gin.H{
+	c.JSON(http.StatusOK, jsonresult.JsonData(gin.H{
 		"captchaId": id,
 		"data":      b64s,
 	}))
@@ -53,12 +53,12 @@ func (captcha *CaptchaController) VerifyCaptcha(c *gin.Context) {
 	var verify VerifyCaptcha
 	err := c.ShouldBindQuery(&verify)
 	if err != nil {
-		c.JSON(http.StatusOK, utils.JsonError(err))
+		c.JSON(http.StatusOK, jsonresult.JsonError(err))
 		return
 	}
 	store := gcaptcha.NewRedisStore(context.TODO(), gredis.GetRedis())
 	result := store.Verify(verify.Id, verify.Value, true)
-	c.JSON(http.StatusOK, utils.JsonData(gin.H{
+	c.JSON(http.StatusOK, jsonresult.JsonData(gin.H{
 		"verify_result": result,
 	}))
 }

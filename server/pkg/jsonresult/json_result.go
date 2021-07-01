@@ -1,4 +1,4 @@
-package utils
+package jsonresult
 
 import "go-skeleton/pkg/errors"
 
